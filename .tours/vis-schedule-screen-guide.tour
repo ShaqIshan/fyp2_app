@@ -1,0 +1,11 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Vis Schedule Screen Guide",
+  "steps": [
+    {
+      "file": "lib/Screens/parent_screens/visual_schedule_screen/add_visual_schedule_screen.dart",
+      "description": "print all the fields for now",
+      "line": 291
+    }
+  ]
+}
