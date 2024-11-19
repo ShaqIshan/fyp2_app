@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/settings_screen_wrapper.dart';
+import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/settings_wrapper.dart';
 import 'package:fyp2_app/Screens/parent_screens/parent_wrapper.dart';
 import 'package:fyp2_app/Screens/parent_screens/visual_schedule_screen/add_visual_schedule_screen.dart';
 import 'package:fyp2_app/shared/app_theme.dart';

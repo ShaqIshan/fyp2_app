@@ -1,6 +1,7 @@
 // lib/screens/settings/settings_wrapper.dart
 
 import 'package:flutter/material.dart';
+import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/edit_details_screen.dart';
 import 'package:fyp2_app/services/auth_service.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 
@@ -44,6 +45,11 @@ class SettingsWrapper extends StatelessWidget {
                 Icons.person_outline,
                 onTap: () {
                   // TODO: Navigate to edit personal details screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const EditDetailsScreen()),
+                  );
                 },
               ),
               _buildSettingsItem(

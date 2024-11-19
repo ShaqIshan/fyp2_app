@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fyp2_app/Screens/parent_screens/bottom_nav_bar/bottom_nav_bar.dart';
-import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/settings_screen_wrapper.dart';
+import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/settings_wrapper.dart';
 import 'package:fyp2_app/screens/parent_screens/parent_dashboard_screens/parent_dashboard.dart';
 import 'package:fyp2_app/screens/parent_screens/visual_schedule_screen/visual_schedule_screen.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
