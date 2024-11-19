@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
             // if we have a user value in (appuser) means user is logged in
 
             // for this we need to make an if statement to go to home page , if cant eye contact and set child to low and so forth
-            return const ParentWrapper();
+            return const ChildNameInput();
 
             // its supposed to be below here but replace for a while to assess
             // return ParentHome(user: value);

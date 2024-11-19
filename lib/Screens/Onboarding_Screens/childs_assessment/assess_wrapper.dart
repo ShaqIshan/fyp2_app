@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp2_app/Screens/Onboarding_Screens/child_name/child_name_input.dart';
 import 'package:fyp2_app/Screens/Onboarding_Screens/childs_assessment/eye_contact_question.dart';
 import 'package:fyp2_app/Screens/Onboarding_Screens/childs_assessment/hyperactive_question.dart';
 import 'package:fyp2_app/Screens/Onboarding_Screens/childs_assessment/word_usage_question.dart';
@@ -9,12 +10,14 @@ import 'package:fyp2_app/Screens/parent_screens/parent_wrapper.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 
 class AssessWrapper extends StatefulWidget {
+  final String childName;
+  final bool isFromProfileManagement;
+
   const AssessWrapper({
     super.key,
     required this.childName,
+    this.isFromProfileManagement = false,
   });
-
-  final String childName;
 
   @override
   State<AssessWrapper> createState() => _AssessWrapperState();
@@ -24,6 +27,21 @@ class _AssessWrapperState extends State<AssessWrapper> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   final int _totalPages = 6;
+
+  void _goBack() {
+    if (_currentPage > 0) {
+      _previousPage();
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChildNameInput(
+            isFromProfileManagement: widget.isFromProfileManagement,
+          ),
+        ),
+      );
+    }
+  }
 
   // Store answers for each question
   final List<String?> _answers = List.filled(6, null);
@@ -90,20 +108,23 @@ class _AssessWrapperState extends State<AssessWrapper> {
   }
 
   void _submitAssessment() {
-    // Print all answers for now
-
-    // for now we get the child name from the passing of required child name from child_name_input
-    print('Submitting assessment for child: ${widget.childName}');
-
-    print('Assessment Answers:');
+    // Print all answers for child profile data
+    print('\n--- Assessment Submission ---');
+    print('Child Name: ${widget.childName}');
+    print('Assessment Results:');
     for (int i = 0; i < _answers.length; i++) {
       print('Question ${i + 1}: ${_answers[i]}');
     }
+    print('------------------------\n');
+
+    // TODO: Implement state management
+    // Will save child profile data using a state management solution
+    // Example: context.read<ChildProfileProvider>().addProfile(newProfile);
 
     // Navigate to ParentWrapper
-    Navigator.of(context).pushAndRemoveUntil(
+    Navigator.pushReplacement(
+      context,
       MaterialPageRoute(builder: (context) => const ParentWrapper()),
-      (Route<dynamic> route) => false,
     );
   }
 
@@ -114,13 +135,11 @@ class _AssessWrapperState extends State<AssessWrapper> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: _currentPage > 0
-            ? IconButton(
-                icon: const Icon(Icons.arrow_back),
-                color: AppTheme.primaryBrown,
-                onPressed: _previousPage,
-              )
-            : null,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: AppTheme.primaryBrown,
+          onPressed: _goBack, // Use replacement navigation
+        ),
       ),
       body: Column(
         children: [

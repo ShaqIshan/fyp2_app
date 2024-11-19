@@ -3,7 +3,12 @@ import 'package:fyp2_app/Screens/Onboarding_Screens/childs_assessment/assess_wra
 import 'package:fyp2_app/shared/app_theme.dart';
 
 class ChildNameInput extends StatefulWidget {
-  const ChildNameInput({super.key});
+  final bool isFromProfileManagement;
+
+  const ChildNameInput({
+    super.key,
+    this.isFromProfileManagement = false,
+  });
 
   @override
   State<ChildNameInput> createState() => _ChildNameInputState();
@@ -21,12 +26,16 @@ class _ChildNameInputState extends State<ChildNameInput> {
   }
 
   void _proceedToAssessment(BuildContext context, String name) {
-    // Replace current screen with AssessWrapper, preventing back navigation
-    Navigator.of(context).pushAndRemoveUntil(
+    // TODO: Use state management to store child name
+
+    Navigator.pushReplacement(
+      context,
       MaterialPageRoute(
-        builder: (context) => AssessWrapper(childName: name),
+        builder: (context) => AssessWrapper(
+          childName: name,
+          isFromProfileManagement: widget.isFromProfileManagement,
+        ),
       ),
-      (Route<dynamic> route) => false,
     );
   }
 
@@ -34,6 +43,17 @@ class _ChildNameInputState extends State<ChildNameInput> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.creamBackground,
+      appBar: widget.isFromProfileManagement
+          ? AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                color: AppTheme.primaryBrown,
+                onPressed: () => Navigator.pop(context),
+              ),
+            )
+          : null,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),

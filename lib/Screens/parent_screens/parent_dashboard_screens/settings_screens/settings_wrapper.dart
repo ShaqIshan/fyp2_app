@@ -1,6 +1,7 @@
 // lib/screens/settings/settings_wrapper.dart
 
 import 'package:flutter/material.dart';
+import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/child_profile_screen/child_profile_wrapper.dart';
 import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/edit_details_screen.dart';
 import 'package:fyp2_app/services/auth_service.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
@@ -57,6 +58,11 @@ class SettingsWrapper extends StatelessWidget {
                 Icons.child_care_outlined,
                 onTap: () {
                   // TODO: Navigate to child profile management screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ChildProfileWrapper()),
+                  );
                 },
               ),
               const SizedBox(height: 24),
@@ -148,7 +154,7 @@ class SettingsWrapper extends StatelessWidget {
           color: textColor ?? AppTheme.textDark,
         ),
       ),
-      trailing: Icon(
+      trailing: const Icon(
         Icons.arrow_forward_ios,
         size: 16,
         color: AppTheme.secondaryBrown,

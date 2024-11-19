@@ -2,17 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/settings_wrapper.dart';
 import 'package:fyp2_app/Screens/parent_screens/parent_wrapper.dart';
 import 'package:fyp2_app/Screens/parent_screens/visual_schedule_screen/add_visual_schedule_screen.dart';
+import 'package:fyp2_app/models/child_profile.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 import 'package:fyp2_app/shared/shared_parents_screen/activity_card_styles.dart';
 import 'package:fyp2_app/shared/shared_parents_screen/activity_card_widget.dart';
 import 'package:fyp2_app/shared/shared_parents_screen/shared_schedule_item_widget.dart';
-
-class ChildProfile {
-  final String name;
-  final String id;
-
-  ChildProfile({required this.name, required this.id});
-}
 
 class ParentDashboard extends StatefulWidget {
   final VoidCallback onSettingsPressed;
@@ -29,8 +23,8 @@ class ParentDashboard extends StatefulWidget {
 class _ParentDashboardState extends State<ParentDashboard> {
   // Mock data - later this will come from your database
   final List<ChildProfile> children = [
-    ChildProfile(name: 'Sophie', id: '1'),
-    ChildProfile(name: 'Alex', id: '2'),
+    ChildProfile(name: 'Sophie', id: '1', speechDelayLevel: 'high'),
+    ChildProfile(name: 'Alex', id: '2', speechDelayLevel: 'low'),
   ];
   String selectedChildId = '1'; // Default selected child
 
