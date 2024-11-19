@@ -82,6 +82,7 @@ class _ParentDashboardState extends State<ParentDashboard> {
                       // TODO: Navigate to add child screen
                       print('Navigate to add child screen');
                       print('Navigate to add child screen');
+                      print('Navigate to add child screen');
                     } else {
                       setState(() {
                         selectedChildId = value;
