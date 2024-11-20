@@ -1,12 +1,13 @@
 // lib/screens/settings/settings_wrapper.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/child_profile_screen/child_profile_wrapper.dart';
 import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/edit_details_screen.dart';
 import 'package:fyp2_app/services/auth_service.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 
-class SettingsWrapper extends StatelessWidget {
+class SettingsWrapper extends ConsumerWidget {
   final VoidCallback onBackPressed;
 
   const SettingsWrapper({
@@ -15,7 +16,7 @@ class SettingsWrapper extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: AppTheme.creamBackground,
       appBar: AppBar(
@@ -100,8 +101,6 @@ class SettingsWrapper extends StatelessWidget {
                   onPressed: () async {
                     await AuthService.signOut();
                     // Note: No navigation needed as auth provider will handle redirect
-
-                    Navigator.pop(context); // goes back to login page
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,

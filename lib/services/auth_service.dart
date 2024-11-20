@@ -4,15 +4,27 @@ import 'package:fyp2_app/models/app_user.dart';
 class AuthService {
   static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
+  // Add this to track signup vs signin
+  static bool _isNewSignup = false;
+
+  // Getter for signup status
+  static bool get isNewSignup => _isNewSignup;
+
   // sign up a new user
   // (?) means the (AppUser) value can be null
   static Future<AppUser?> signUp(String email, String password) async {
     //try catch is to catch any errors if there are any
     try {
+      print("\n--- Sign Up Attempt ---");
+      _isNewSignup = true; // Set to true for new signups
+      print("Setting isNewSignup to true");
+
       // when we sign up we get back an object (usercredential) // (_firebaseAuth) has to be called with because its the one that connects to firebase auth
       // (createUserWithEmailAndPassword) is a method in it // this whole method signs up a user with firebase
       final UserCredential credential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
+
+      print("User created with email: ${credential.user?.email}");
 
       // we will get (credential) back we get access to a user object on it, which is the user firebase just created
       // user might be null because credentials that were not allowed or password too short, email already exist // below is to check valid credential or user value[is it null]
@@ -32,21 +44,18 @@ class AuthService {
     }
   }
 
-  // Log Out
-
-  // (signOut()) doesnt need an arguement passed in it bcs firebase take the json web token for the user and deletes it to say theyre signed out
-  static Future<void> signOut() async {
-    await _firebaseAuth.signOut(); // this is the function
-  }
-
   // sign users in
   static Future<AppUser?> signIn(String email, String password) async {
     //try catch is to catch any errors if there are any
     try {
+      _isNewSignup = false; // Set to false for sign ins
+
       // when we sign in we get back an object (usercredential) // (_firebaseAuth) has to be called with because its the one that connects to firebase auth
       // (signInWithEmailAndPassword) is a method in it // this whole method signs in a user with firebase
       final UserCredential credential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
+
+      print("User signed in with email: ${credential.user?.email}");
 
       // we will get (credential) back we get access to a user object on it, which is the user firebase just created
       // user might be null because credentials that were not allowed or password too short, email already exist // below is to check valid credential or user value[is it null]
@@ -64,5 +73,16 @@ class AuthService {
     } catch (e) {
       return null; // if we get some other kind of error
     }
+  }
+
+  // Log Out
+
+  // (signOut()) doesnt need an arguement passed in it bcs firebase take the json web token for the user and deletes it to say theyre signed out
+  static Future<void> signOut() async {
+    print("\n--- Sign Out Attempt ---");
+    _isNewSignup = false; // Reset on logout
+    print("Setting isNewSignup to false");
+    await _firebaseAuth.signOut();
+    print("User signed out"); // this is the function
   }
 }

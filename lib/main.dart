@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
+        title: 'MultiTalk AAC',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
@@ -49,17 +49,33 @@ class MyApp extends StatelessWidget {
           // (data :) data is received and read // new stream value yielded from provider if its user or null
           // (data: (value)) we get value back from the stream and get access to it as (user)
           return user.when(data: (value) {
-            print("Main consumer received: ${value?.email}"); // Debug print
-
+            print("\n--- Main.dart Navigation Debug ---");
+            print("Auth state value: ${value?.email}");
+            final isNewSignup = ref.watch(isNewSignupProvider);
+            print("IsNewSignup value: $isNewSignup");
+            print(
+                "Current navigation target: ${value == null ? 'WelcomePage' : isNewSignup ? 'ChildNameInput' : 'ParentWrapper'}");
+            print("--------------------------------\n");
             // user isnt logged in
             if (value == null) {
-              return const SignParent();
+              return const WelcomePage();
             }
 
             // if we have a user value in (appuser) means user is logged in
 
             // for this we need to make an if statement to go to home page , if cant eye contact and set child to low and so forth
-            return const ChildNameInput();
+
+            // TODO: When implementing state management, this can be replaced with:
+            // final userProfile = ref.watch(userProfileProvider(value.uid));
+            // bool isNewSignup = userProfile.data?.isNew ?? true;
+
+            if (isNewSignup) {
+              // For new signups, show child name input
+              return const ChildNameInput();
+            } else {
+              // For existing users, go straight to parent wrapper
+              return const ParentWrapper();
+            }
 
             // its supposed to be below here but replace for a while to assess
             // return ParentHome(user: value);
