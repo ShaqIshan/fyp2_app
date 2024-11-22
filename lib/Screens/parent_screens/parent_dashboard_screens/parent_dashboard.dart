@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fyp2_app/Screens/Onboarding_Screens/child_name/child_name_input.dart';
 import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/settings_wrapper.dart';
 import 'package:fyp2_app/Screens/parent_screens/parent_wrapper.dart';
 import 'package:fyp2_app/Screens/parent_screens/visual_schedule_screen/add_visual_schedule_screen.dart';
 import 'package:fyp2_app/models/child_profile.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
-import 'package:fyp2_app/shared/shared_parents_screen/activity_card_styles.dart';
-import 'package:fyp2_app/shared/shared_parents_screen/activity_card_widget.dart';
-import 'package:fyp2_app/shared/shared_parents_screen/shared_schedule_item_widget.dart';
+import 'package:fyp2_app/shared/parents_screen_shared/shared_parents_screen/activity_card_styles.dart';
+import 'package:fyp2_app/shared/parents_screen_shared/shared_parents_screen/activity_card_widget.dart';
+import 'package:fyp2_app/shared/parents_screen_shared/shared_parents_screen/shared_schedule_item_widget.dart';
 
 class ParentDashboard extends StatefulWidget {
   final VoidCallback onSettingsPressed;
@@ -74,6 +75,16 @@ class _ParentDashboardState extends State<ParentDashboard> {
                   onSelected: (String value) {
                     if (value == 'add_new') {
                       // TODO: Navigate to add child screen
+                      Future.delayed(const Duration(milliseconds: 100), () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ChildNameInput(
+                              isFromDashboard: true,
+                            ),
+                          ),
+                        );
+                      });
                       print('Navigate to add child screen');
                     } else {
                       setState(() {

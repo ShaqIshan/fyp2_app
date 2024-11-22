@@ -6,8 +6,10 @@ import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/setting
 import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/edit_details_screen.dart';
 import 'package:fyp2_app/services/auth_service.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
+import 'package:fyp2_app/shared/parents_screen_shared/settings_language/language_selector_widget.dart';
 
-class SettingsWrapper extends ConsumerWidget {
+class SettingsWrapper extends ConsumerStatefulWidget {
+  // Changed to StatefulWidget
   final VoidCallback onBackPressed;
 
   const SettingsWrapper({
@@ -16,7 +18,15 @@ class SettingsWrapper extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsWrapper> createState() => _SettingsWrapperState();
+}
+
+class _SettingsWrapperState extends ConsumerState<SettingsWrapper> {
+  // Mock selected language - replace with state management later
+  String _selectedLanguage = 'English';
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.creamBackground,
       appBar: AppBar(
@@ -27,7 +37,7 @@ class SettingsWrapper extends ConsumerWidget {
             Icons.arrow_back,
             color: AppTheme.primaryBrown,
           ),
-          onPressed: onBackPressed,
+          onPressed: widget.onBackPressed,
         ),
         title: Text(
           'Settings',
@@ -163,37 +173,26 @@ class SettingsWrapper extends ConsumerWidget {
   }
 
   Widget _buildLanguageSelector() {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: const Icon(
-        Icons.language,
-        color: AppTheme.secondaryBrown,
-      ),
-      title: Text(
-        'Language',
-        style: AppTheme.bodyLarge.copyWith(
-          color: AppTheme.textDark,
-        ),
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'English',
-            style: AppTheme.bodyMedium.copyWith(
-              color: AppTheme.secondaryBrown,
-            ),
-          ),
-          const SizedBox(width: 4),
-          const Icon(
-            Icons.arrow_forward_ios,
-            size: 16,
-            color: AppTheme.secondaryBrown,
-          ),
-        ],
-      ),
-      onTap: () {
-        // TODO: Show language selection dialog/screen
+    return LanguageSelector(
+      selectedLanguage: _selectedLanguage,
+      onLanguageChanged: (String newLanguage) {
+        setState(() {
+          _selectedLanguage = newLanguage;
+        });
+
+        // Print selection for debugging
+        print('\n--- Language Selection ---');
+        print('Selected language: $newLanguage');
+        print('------------------------\n');
+
+        // TODO: Implement with state management
+        // Example: context.read<SettingsProvider>().updateLanguage(newValue);
+
+        // TODO: Store in SharedPreferences or similar for persistence
+        // Example: await SharedPreferences.getInstance().setString('language', newValue);
+
+        // TODO: Update app's localization
+        // Example: context.read<LocalizationProvider>().setLocale(newValue);
       },
     );
   }

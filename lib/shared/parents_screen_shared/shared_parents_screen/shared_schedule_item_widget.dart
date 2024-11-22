@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
-import 'package:fyp2_app/shared/shared_parents_screen/activity_card_styles.dart';
+import 'package:fyp2_app/shared/parents_screen_shared/shared_parents_screen/activity_card_styles.dart';
 
 class ScheduleItem extends StatelessWidget {
   final String time;

@@ -1,7 +1,8 @@
 // lib/screens/parent_screens/parent_wrapper.dart
 
 import 'package:flutter/material.dart';
-import 'package:fyp2_app/Screens/parent_screens/bottom_nav_bar/bottom_nav_bar.dart';
+import 'package:fyp2_app/Screens/child_screens/child_wrapper.dart';
+import 'package:fyp2_app/Screens/parent_screens/bottom_nav_bar_parents/bottom_nav_bar.dart';
 import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/settings_wrapper.dart';
 import 'package:fyp2_app/screens/parent_screens/parent_dashboard_screens/parent_dashboard.dart';
 import 'package:fyp2_app/screens/parent_screens/visual_schedule_screen/visual_schedule_screen.dart';
@@ -74,6 +75,14 @@ class _ParentWrapperState extends State<ParentWrapper> {
     }
   }
 
+  void _handleChildMode() {
+    // Navigate to child mode
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const ChildWrapper()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final bool showBottomNav = _currentView != ParentView.settings;
@@ -85,9 +94,7 @@ class _ParentWrapperState extends State<ParentWrapper> {
           ? BottomNavBar(
               currentIndex: _currentIndex,
               onNavigation: _handleNavigation,
-              onChildModePressed: () {
-                // TODO: Implement child mode navigation
-              },
+              onChildModePressed: _handleChildMode,
             )
           : null,
     );

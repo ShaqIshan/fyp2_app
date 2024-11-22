@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
-import 'package:fyp2_app/shared/settings_edit_details/form_widgets.dart';
+import 'package:fyp2_app/shared/parents_screen_shared/settings_edit_details/form_widgets.dart';
 
 class EditDetailsScreen extends StatefulWidget {
   const EditDetailsScreen({super.key});

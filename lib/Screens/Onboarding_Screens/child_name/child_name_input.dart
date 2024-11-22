@@ -4,10 +4,12 @@ import 'package:fyp2_app/shared/app_theme.dart';
 
 class ChildNameInput extends StatefulWidget {
   final bool isFromProfileManagement;
+  final bool isFromDashboard;
 
   const ChildNameInput({
     super.key,
     this.isFromProfileManagement = false,
+    this.isFromDashboard = false,
   });
 
   @override
@@ -34,6 +36,7 @@ class _ChildNameInputState extends State<ChildNameInput> {
         builder: (context) => AssessWrapper(
           childName: name,
           isFromProfileManagement: widget.isFromProfileManagement,
+          isFromDashboard: widget.isFromDashboard,
         ),
       ),
     );
@@ -43,7 +46,7 @@ class _ChildNameInputState extends State<ChildNameInput> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.creamBackground,
-      appBar: widget.isFromProfileManagement
+      appBar: (widget.isFromProfileManagement || widget.isFromDashboard)
           ? AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,

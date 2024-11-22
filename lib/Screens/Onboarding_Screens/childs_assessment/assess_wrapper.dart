@@ -12,11 +12,13 @@ import 'package:fyp2_app/shared/app_theme.dart';
 class AssessWrapper extends StatefulWidget {
   final String childName;
   final bool isFromProfileManagement;
+  final bool isFromDashboard; // Add this flag
 
   const AssessWrapper({
     super.key,
     required this.childName,
     this.isFromProfileManagement = false,
+    this.isFromDashboard = false, // Add default value
   });
 
   @override
@@ -37,6 +39,7 @@ class _AssessWrapperState extends State<AssessWrapper> {
         MaterialPageRoute(
           builder: (context) => ChildNameInput(
             isFromProfileManagement: widget.isFromProfileManagement,
+            isFromDashboard: widget.isFromDashboard,
           ),
         ),
       );
