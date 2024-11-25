@@ -7,6 +7,7 @@ import 'package:fyp2_app/Screens/Onboarding_Screens/welcome/welcome_page.dart';
 //firebase,riverpod,login logout imports
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics_wrapper/levels/animal_puzzle_game/animal_puzzle_wrapper.dart';
 import 'package:fyp2_app/Screens/child_screens/child_wrapper.dart';
 import 'package:fyp2_app/Screens/parent_screens/parent_wrapper.dart';
 import 'package:fyp2_app/Screens/child_screens/child_games_screen/child_games_wrapper.dart';
