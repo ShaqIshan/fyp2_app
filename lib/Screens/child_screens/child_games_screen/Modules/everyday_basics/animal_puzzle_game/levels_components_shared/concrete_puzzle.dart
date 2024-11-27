@@ -1,8 +1,8 @@
-// lib/shared/puzzle_components/concrete_puzzle_layouts.dart
-
 import 'package:flutter/material.dart';
-import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics_wrapper/levels/animal_puzzle_game/puzzles/puzzle_piece_shared/three_piece_puzzle.dart';
-import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics_wrapper/levels/animal_puzzle_game/puzzles/puzzle_piece_shared/two_piece_puzzle.dart';
+import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics/animal_puzzle_game/levels_components_shared/three_piece_puzzle.dart';
+import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics/animal_puzzle_game/levels_components_shared/two_piece_puzzle.dart';
+
+// NOTE:
 
 class StandardTwoPiecePuzzle extends TwoPieceLayoutPuzzle {
   const StandardTwoPiecePuzzle({
@@ -62,6 +62,7 @@ class StandardThreePiecePuzzle extends ThreePieceLayoutPuzzle {
     required super.onNext,
     required super.onReset,
     required super.placedPieces,
+    super.isLastPuzzle, // Add this line
   });
 
   @override

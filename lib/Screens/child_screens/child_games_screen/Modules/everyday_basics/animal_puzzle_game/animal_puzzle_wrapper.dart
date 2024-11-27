@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics_wrapper/levels/animal_puzzle_game/puzzles/cat_puzzle.dart';
-import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics_wrapper/levels/animal_puzzle_game/puzzles/puppy_puzzle.dart';
-import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics_wrapper/levels/animal_puzzle_game/puzzles/rabbit_puzzle.dart';
+import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics/animal_puzzle_game/levels/cat_puzzle.dart';
+import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics/animal_puzzle_game/levels/puppy_puzzle.dart';
+import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics/animal_puzzle_game/levels/rabbit_puzzle.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 
 enum PuzzleType {
@@ -19,12 +19,16 @@ class AnimalPuzzleWrapper extends StatefulWidget {
 
 class _AnimalPuzzleWrapperState extends State<AnimalPuzzleWrapper> {
   PuzzleType currentPuzzle = PuzzleType.cat;
+  Set<PuzzleType> completedPuzzles = {}; // Track which puzzles are completed
   int score = 0;
 
   void updateScore(int newPoints) {
-    setState(() {
-      score += newPoints;
-    });
+    if (!completedPuzzles.contains(currentPuzzle)) {
+      setState(() {
+        completedPuzzles.add(currentPuzzle);
+        score += newPoints;
+      });
+    }
   }
 
   void _nextPuzzle() {

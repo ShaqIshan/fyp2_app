@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics_wrapper/levels/animal_puzzle_game/puzzles/puzzle_piece_shared/concrete_puzzle.dart';
-import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics_wrapper/levels/animal_puzzle_game/puzzles/puzzle_piece_shared/three_piece_puzzle.dart';
+import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics/animal_puzzle_game/levels_components_shared/concrete_puzzle.dart';
+import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics/animal_puzzle_game/levels_components_shared/three_piece_puzzle.dart';
 
 class PuppyPuzzle extends StatefulWidget {
   final Function(int) onScoreUpdate;
@@ -69,7 +69,7 @@ class _PuppyPuzzleState extends State<PuppyPuzzle> {
         setState(() {
           placedPieces[pieceId] = isPlaced;
           if (placedPieces.values.every((placed) => placed)) {
-            showSuccess = false;
+            showSuccess = true;
             widget.onScoreUpdate(1);
           }
         });
@@ -86,6 +86,7 @@ class _PuppyPuzzleState extends State<PuppyPuzzle> {
           showSuccess = false;
         });
       },
+      isLastPuzzle: true, // Add this line to indicate it's the last puzzle
     );
   }
 }

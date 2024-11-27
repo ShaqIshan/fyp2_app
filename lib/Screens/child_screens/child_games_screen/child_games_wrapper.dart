@@ -1,7 +1,7 @@
 // lib/screens/child/child_games_wrapper.dart
 
 import 'package:flutter/material.dart';
-import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics_wrapper/everyday_basics_wrapper.dart';
+import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics/everyday_basics_wrapper.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 import 'package:fyp2_app/models/activity_category.dart';
 import 'package:fyp2_app/shared/child_screen_shared/child_games_screen/activity_card.dart';

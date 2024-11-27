@@ -1,30 +1,25 @@
-// lib/shared/puzzle_components/three_piece_layout.dart
+// lib/shared/puzzle_components/two_piece_layout.dart
 
 import 'package:flutter/material.dart';
-import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics_wrapper/levels/animal_puzzle_game/puzzles/puzzle_piece_shared/base_puzzle.dart';
+import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics/animal_puzzle_game/levels_components_shared/base_puzzle.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 
-// Extension of PiecePlacement for flexible positioning
-class FlexiblePiecePlacement extends PiecePlacement {
+// Extension of PiecePlacement for vertical stacking layout
+class VerticalPiecePlacement extends PiecePlacement {
   final double dropZoneTop;
-  final double dropZoneLeft;
-  final double dropZoneWidth;
   final double heightRatio;
 
-  FlexiblePiecePlacement({
+  VerticalPiecePlacement({
     required super.id,
     required super.image,
     required this.dropZoneTop,
-    required this.dropZoneLeft,
-    required this.dropZoneWidth,
     required this.heightRatio,
     required super.size,
   });
 }
 
-abstract class ThreePieceLayoutPuzzle
-    extends BasePuzzle<FlexiblePiecePlacement> {
-  const ThreePieceLayoutPuzzle({
+abstract class TwoPieceLayoutPuzzle extends BasePuzzle<VerticalPiecePlacement> {
+  const TwoPieceLayoutPuzzle({
     required super.puzzleAreaSize,
     required super.referenceImage,
     required super.pieces,
@@ -67,15 +62,15 @@ abstract class ThreePieceLayoutPuzzle
             ),
           ),
           ...pieces
-              .map((piece) => buildDropZone(piece as FlexiblePiecePlacement)),
+              .map((piece) => buildDropZone(piece as VerticalPiecePlacement)),
           ...pieces.where((piece) => placedPieces[piece.id] == true).map(
             (piece) {
-              final fPiece = piece as FlexiblePiecePlacement;
+              final vPiece = piece as VerticalPiecePlacement;
               return Positioned(
-                top: fPiece.dropZoneTop * puzzleAreaSize,
-                left: fPiece.dropZoneLeft * puzzleAreaSize,
-                width: fPiece.dropZoneWidth * puzzleAreaSize,
-                height: fPiece.heightRatio * puzzleAreaSize,
+                top: vPiece.dropZoneTop * puzzleAreaSize,
+                left: 0,
+                right: 0,
+                height: vPiece.heightRatio * puzzleAreaSize,
                 child: Image.asset(
                   piece.image,
                   fit: BoxFit.contain,
@@ -89,11 +84,11 @@ abstract class ThreePieceLayoutPuzzle
   }
 
   @override
-  Widget buildDropZone(FlexiblePiecePlacement piece) {
+  Widget buildDropZone(VerticalPiecePlacement piece) {
     return Positioned(
       top: piece.dropZoneTop * puzzleAreaSize,
-      left: piece.dropZoneLeft * puzzleAreaSize,
-      width: piece.dropZoneWidth * puzzleAreaSize,
+      left: 0,
+      right: 0,
       height: piece.heightRatio * puzzleAreaSize,
       child: DragTarget<String>(
         builder: (context, candidateData, rejectedData) {

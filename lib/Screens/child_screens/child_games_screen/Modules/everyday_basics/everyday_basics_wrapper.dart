@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics_wrapper/levels/animal_puzzle_game/animal_puzzle_wrapper.dart';
+import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics/animal_puzzle_game/animal_puzzle_wrapper.dart';
+import 'package:fyp2_app/Screens/child_screens/child_games_screen/Modules/everyday_basics/happy_helpers/pencil_activity_wrapper.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 import 'package:fyp2_app/shared/game_theme.dart';
 
@@ -30,10 +31,10 @@ class _EverydayBasicsWrapperState extends State<EverydayBasicsWrapper> {
       'requiredStars': 0,
     },
     {
-      'id': 'happy_helpers',
-      'title': 'Happy Helpers',
-      'description': 'Learn about helping at home',
-      'icon': Icons.home,
+      'id': 'pencil_activities', // Add this game option
+      'title': 'Fun with Drawing', // Changed from 'Happy Helpers'
+      'description': 'Practice drawing and tracing',
+      'icon': Icons.edit, // Changed icon to represent drawing
       'color': AppTheme.childPurple,
       'difficulty': 'Easy',
       'isLocked': false,
@@ -342,7 +343,9 @@ class _EverydayBasicsWrapperState extends State<EverydayBasicsWrapper> {
       case 'animals_nature':
         gameScreen = const AnimalPuzzleWrapper();
         break;
-      // Add cases for other games as they are implemented
+      case 'pencil_activities':
+        gameScreen = const PencilActivityWrapper();
+        break;
       default:
         gameScreen = const Placeholder();
     }
