@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:fyp2_app/Screens/child_screens/bottom_nav_bar_child/child_bottom_nav.dart';
 import 'package:fyp2_app/Screens/child_screens/child_aac_board_screen/child_aac_board.dart';
-import 'package:fyp2_app/Screens/child_screens/child_games_screen/child_games_wrapper.dart';
 import 'package:fyp2_app/Screens/child_screens/child_home_screen/child_home.dart';
 import 'package:fyp2_app/Screens/child_screens/child_visual_schedule_screen/child_visual_schedule.dart';
+import 'package:fyp2_app/Screens/child_screens/games_learning_modules_screen/learning_modules_wrapper.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 
 enum ChildView { games, schedule, home, aacBoard }
@@ -43,7 +43,7 @@ class _ChildWrapperState extends State<ChildWrapper> {
   Widget _getCurrentScreen() {
     switch (_currentView) {
       case ChildView.games:
-        return const ChildGamesWrapper();
+        return const LearningModulesWrapper();
       case ChildView.schedule:
         return const ChildVisualSchedule();
       case ChildView.home:

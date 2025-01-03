@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fyp2_app/screens/parent_screens/parent_wrapper.dart'; // Add this import
 import 'package:fyp2_app/services/auth_service.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 
@@ -15,16 +17,15 @@ class _SignInState extends State<SignIn> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool _showPassword = false;
-  // (?) is could be null because it can be null if theres no errors and remain so if there are no errors // assign string to provide feedback to the user
   String? _errorFeedback;
+  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.stretch, // make input fields full width across
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             'Log In',
@@ -33,7 +34,7 @@ class _SignInState extends State<SignIn> {
           ),
           const SizedBox(height: 16),
           Text(
-            'Lets pick up where you left of',
+            'Lets pick up where you left off',
             textAlign: TextAlign.center,
             style: AppTheme.titleLarge,
           ),
@@ -41,7 +42,6 @@ class _SignInState extends State<SignIn> {
 
           // Email
           TextFormField(
-            //controller is something thatll store the value of whatever the user types into this field. we create the controller and associate it with the (TextFormField)
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
             decoration: AppTheme.getInputDecoration(
@@ -64,10 +64,8 @@ class _SignInState extends State<SignIn> {
 
           // Password with visibility toggle
           TextFormField(
-            //controller is something thatll store the value of whatever the user types into this field. we create the controller and associate it with the (TextFormField)
             controller: _passwordController,
-            obscureText:
-                !_showPassword, // black circles in the inputfield [hidden]
+            obscureText: !_showPassword,
             decoration: InputDecoration(
               hintText: 'Password',
               hintStyle: AppTheme.modifyStyle(
@@ -108,7 +106,6 @@ class _SignInState extends State<SignIn> {
           ),
           const SizedBox(height: 24),
 
-          // Error feedback
           if (_errorFeedback != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
@@ -126,47 +123,73 @@ class _SignInState extends State<SignIn> {
           SizedBox(
             height: 56,
             child: ElevatedButton(
-              onPressed: () async {
-                // when we call this method it will find each validate functions and if 1 of validation (_formKey.currentState!.validate()) becomes false and if all is passed it becomes true
-                if (_formKey.currentState!.validate()) {
-                  setState(() {
-                    _errorFeedback = null;
-                  });
-
-                  final email = _emailController.text.trim();
-                  final password = _passwordController.text.trim();
-
-                  print("Attempting sign in..."); // Debug print
-
-                  final user = await AuthService.signIn(email, password);
-
-                  //this try catch is just for error confirmation
-                  try {
-                    final user = await AuthService.signIn(email, password);
-                    print("Sign in result: ${user?.email}"); // Debug print
-
-                    if (user == null) {
-                      setState(() {
-                        _errorFeedback = 'Incorrect login credentials';
-                      });
-                    }
-                  } catch (e) {
-                    print("Sign in error: $e"); // Debug print
-                    setState(() {
-                      _errorFeedback = 'An error occurred during sign in';
-                    });
-                  }
-                }
-              },
+              onPressed: _loading ? null : _handleSignIn,
               style: AppTheme.primaryButtonStyle,
-              child: const Text(
-                'Log In',
-                style: AppTheme.buttonTextStyle,
-              ),
+              child: _loading
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : const Text(
+                      'Log In',
+                      style: AppTheme.buttonTextStyle,
+                    ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _handleSignIn() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _loading = true;
+      _errorFeedback = null;
+    });
+
+    try {
+      final email = _emailController.text.trim();
+      final password = _passwordController.text.trim();
+
+      final user = await AuthService.signIn(email, password);
+
+      if (user != null && mounted) {
+        // Navigate to parent dashboard and clear the stack
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const ParentWrapper()),
+          (Route<dynamic> route) => false,
+        );
+      } else {
+        setState(() {
+          _errorFeedback = 'Incorrect login credentials';
+        });
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        switch (e.code) {
+          case 'user-not-found':
+            _errorFeedback = 'No user found with this email';
+            break;
+          case 'wrong-password':
+            _errorFeedback = 'Incorrect password';
+            break;
+          case 'invalid-email':
+            _errorFeedback = 'Invalid email address';
+            break;
+          case 'user-disabled':
+            _errorFeedback = 'This account has been disabled';
+            break;
+          default:
+            _errorFeedback = 'An error occurred during sign in';
+        }
+      });
+    } catch (e) {
+      setState(() {
+        _errorFeedback = 'An unexpected error occurred';
+      });
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 }

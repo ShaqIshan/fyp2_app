@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fyp2_app/models/activity_category.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 import 'package:fyp2_app/shared/child_screen_shared/child_games_screen/child_game_styles.dart';
+
+import '../../../models/childs_models/child_learning_modules_games/basic_skills/inner_modules/inner_modules_cards.dart';
 
 class ActivityCard extends StatelessWidget {
   final ActivityCategory category;

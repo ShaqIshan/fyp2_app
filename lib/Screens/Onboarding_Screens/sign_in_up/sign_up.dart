@@ -41,24 +41,6 @@ class _SignUpState extends State<SignUp> {
           ),
           const SizedBox(height: 40),
 
-          // Username
-          TextFormField(
-            //controller is something thatll store the value of whatever the user types into this field. we create the controller and associate it with the (TextFormField)
-            controller: _usernameController,
-            decoration: AppTheme.getInputDecoration(
-              hint: 'Username',
-              icon: Icons.person_outline,
-            ),
-            style: AppTheme.bodyLarge,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a username';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 20),
-
           // Email
           TextFormField(
             //controller is something thatll store the value of whatever the user types into this field. we create the controller and associate it with the (TextFormField)

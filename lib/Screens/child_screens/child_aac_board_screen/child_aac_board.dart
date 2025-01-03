@@ -57,7 +57,7 @@ class ChildAACBoard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 1.1,
+          childAspectRatio: 1.2,
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
         ),
@@ -100,12 +100,14 @@ class ChildAACBoard extends StatelessWidget {
           },
           borderRadius: BorderRadius.circular(20),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 16, vertical: 12), // Adjusted padding
             child: Column(
+              mainAxisSize: MainAxisSize.min, // Added this
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(12), // Reduced padding
                   decoration: BoxDecoration(
                     color: color.withOpacity(0.1),
                     shape: BoxShape.circle,
@@ -113,17 +115,21 @@ class ChildAACBoard extends StatelessWidget {
                   child: Icon(
                     icon,
                     color: color,
-                    size: 40,
+                    size: 36, // Reduced size
                   ),
                 ),
-                const SizedBox(height: 12),
-                Text(
-                  name,
-                  style: AppTheme.childTitleLarge.copyWith(
-                    color: color,
-                    fontSize: 18,
+                const SizedBox(height: 8), // Reduced spacing
+                FittedBox(
+                  // Added FittedBox
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    name,
+                    style: AppTheme.childTitleLarge.copyWith(
+                      color: color,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ],
             ),

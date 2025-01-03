@@ -100,6 +100,7 @@ class AppTheme {
   static InputDecoration getInputDecoration({
     required String hint,
     required IconData icon,
+    String? errorText,
   }) {
     return InputDecoration(
       hintText: hint,
@@ -110,6 +111,14 @@ class AppTheme {
       border: defaultBorder,
       enabledBorder: defaultBorder,
       focusedBorder: focusedBorder,
+      errorBorder: defaultBorder.copyWith(
+        borderSide: const BorderSide(color: Colors.red),
+      ),
+      focusedErrorBorder: defaultBorder.copyWith(
+        borderSide: const BorderSide(color: Colors.red, width: 2),
+      ),
+      errorText: errorText,
+      errorStyle: bodyMedium.copyWith(color: Colors.red),
     );
   }
 

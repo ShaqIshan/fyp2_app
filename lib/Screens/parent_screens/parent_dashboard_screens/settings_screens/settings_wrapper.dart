@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/child_profile_screen/child_profile_wrapper.dart';
-import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/edit_details_screen.dart';
+import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/edit_details_screen/edit_details_screen.dart';
 import 'package:fyp2_app/services/auth_service.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 import 'package:fyp2_app/shared/parents_screen_shared/settings_language/language_selector_widget.dart';
