@@ -60,12 +60,6 @@ class WelcomePage extends ConsumerWidget {
                         description:
                             'Tools and guidance for parents to support their child\'s communication journey',
                       ),
-                      const CustomFeatureCard(
-                        icon: Icons.track_changes,
-                        title: 'Progress Tracking',
-                        description:
-                            'Monitor and celebrate communication milestones',
-                      ),
                     ],
                   ),
                 ),

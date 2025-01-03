@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp2_app/Screens/Onboarding_Screens/child_name/child_name_input.dart';
-import 'package:fyp2_app/Screens/Onboarding_Screens/childs_assessment/assess_wrapper.dart';
-import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/damn.dart';
+import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/parent_dashboard.dart';
 import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/child_profile_screen/edit_child_profile.dart';
-import 'package:fyp2_app/models/child_profile.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
-import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/edit_details_screen.dart';
+import 'package:fyp2_app/models/parents_models/child_profile.dart';
 
 enum ProfileView {
   list,
   edit,
-  grid, // For future communication board grid settings
+  grid,
 }
 
 class ChildProfileWrapper extends StatefulWidget {
@@ -24,21 +24,26 @@ class _ChildProfileWrapperState extends State<ChildProfileWrapper> {
   ProfileView _currentView = ProfileView.list;
   ChildProfile? _selectedProfile;
 
-  // Mock data - Replace with state management later
-  final List<ChildProfile> _profiles = [
-    ChildProfile(
-      id: '1',
-      name: 'Sophia',
-      speechDelayLevel: 'Mild speech delay',
-      textToSpeechEnabled: true,
-    ),
-    ChildProfile(
-      id: '2',
-      name: 'Robert',
-      speechDelayLevel: 'Moderate speech delay',
-      textToSpeechEnabled: true,
-    ),
-  ];
+  // Reference to Firestore
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final String? _userId = FirebaseAuth.instance.currentUser?.uid;
+  late Stream<QuerySnapshot> _profilesStream;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeProfilesStream();
+  }
+
+  void _initializeProfilesStream() {
+    if (_userId != null) {
+      _profilesStream = _firestore
+          .collection('users')
+          .doc(_userId)
+          .collection('children')
+          .snapshots();
+    }
+  }
 
   void _editProfile(ChildProfile profile) {
     setState(() {
@@ -56,7 +61,6 @@ class _ChildProfileWrapperState extends State<ChildProfileWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    // Common app bar for all views
     final appBar = AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -87,17 +91,61 @@ class _ChildProfileWrapperState extends State<ChildProfileWrapper> {
   }
 
   Widget _buildProfileList() {
-    return ListView(
-      padding: const EdgeInsets.all(20),
-      children: [
-        Text(
-          'Profiles',
-          style: AppTheme.titleLarge,
-        ),
-        const SizedBox(height: 16),
-        ..._profiles.map((profile) => _buildProfileCard(profile)),
-        _buildAddNewProfileButton(),
-      ],
+    return StreamBuilder<QuerySnapshot>(
+      stream: _profilesStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              'Error loading profiles',
+              style: AppTheme.bodyLarge.copyWith(color: Colors.red),
+            ),
+          );
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(color: AppTheme.accentGreen),
+          );
+        }
+
+        final profiles = snapshot.data?.docs.map((doc) {
+              final data = doc.data() as Map<String, dynamic>;
+              return ChildProfile(
+                id: doc.id,
+                name: data['name'] ?? 'Unnamed Child',
+                textToSpeechEnabled: data['textToSpeechEnabled'] ?? true,
+              );
+            }).toList() ??
+            [];
+
+        return ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
+            Text(
+              'Profiles',
+              style: AppTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+            if (profiles.isEmpty)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(
+                    'No profiles added yet',
+                    style: AppTheme.bodyLarge.copyWith(
+                      color: AppTheme.secondaryBrown,
+                    ),
+                  ),
+                ),
+              )
+            else
+              ...profiles.map((profile) => _buildProfileCard(profile)),
+            const SizedBox(height: 16),
+            _buildAddNewProfileButton(),
+          ],
+        );
+      },
     );
   }
 
@@ -126,12 +174,6 @@ class _ChildProfileWrapperState extends State<ChildProfileWrapper> {
                   profile.name,
                   style: AppTheme.titleMedium,
                 ),
-                Text(
-                  profile.speechDelayLevel,
-                  style: AppTheme.bodyMedium.copyWith(
-                    color: AppTheme.secondaryBrown,
-                  ),
-                ),
               ],
             ),
           ),
@@ -159,7 +201,6 @@ class _ChildProfileWrapperState extends State<ChildProfileWrapper> {
   Widget _buildAddNewProfileButton() {
     return InkWell(
       onTap: () {
-        // Navigate to child name input with back button
         Navigator.push(
           context,
           MaterialPageRoute(

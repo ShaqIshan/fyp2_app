@@ -1,6 +1,15 @@
+// lib/screens/parent_screens/settings_screens/child_profile/edit_profile.dart
+
 import 'package:flutter/material.dart';
-import 'package:fyp2_app/models/child_profile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fyp2_app/models/parents_models/child_profile.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
+import 'components/profile_name_section.dart';
+import 'components/communication_section.dart';
+import 'components/remove_section.dart';
+import 'components/save_button.dart';
+import 'services/edit_profile_service.dart';
 
 class EditChildProfile extends StatefulWidget {
   final ChildProfile profile;
@@ -18,212 +27,103 @@ class EditChildProfile extends StatefulWidget {
 
 class _EditChildProfileState extends State<EditChildProfile> {
   final _formKey = GlobalKey<FormState>();
+  final _passwordController = TextEditingController();
   late TextEditingController _nameController;
   late bool _textToSpeechEnabled;
+  String? _errorMessage;
+  bool _isLoading = false;
+
+  late final EditProfileService _profileService;
 
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with existing profile data
     _nameController = TextEditingController(text: widget.profile.name);
     _textToSpeechEnabled = widget.profile.textToSpeechEnabled;
+    _profileService = EditProfileService(
+      context: context,
+      profileId: widget.profile.id,
+      onSuccess: widget.onBack,
+    );
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
-  void _saveChanges() {
+  Future<void> _saveChanges() async {
     if (!_formKey.currentState!.validate()) return;
 
-    // Print collected data (for now)
-    print('\n--- Child Profile Update ---');
-    print('Profile ID: ${widget.profile.id}');
-    print('Name: ${_nameController.text}');
-    print('Text-to-Speech: $_textToSpeechEnabled');
-    print('-------------------------\n');
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
 
-    // TODO: Implement state management
-    // Will update profile data using a state management solution
-    // Example: context.read<ChildProfileProvider>().updateProfile(updatedProfile);
-
-    widget.onBack();
-  }
-
-  void _showRemoveProfileDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          'Remove Profile',
-          style: AppTheme.headingMedium,
-        ),
-        content: Text(
-          'Are you sure you want to remove this profile? This action cannot be undone.',
-          style: AppTheme.bodyMedium,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: AppTheme.titleMedium.copyWith(
-                color: AppTheme.secondaryBrown,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              // TODO: Implement profile removal with state management
-              print('Removing profile: ${widget.profile.id}');
-              Navigator.pop(context); // Close dialog
-              Navigator.pop(context); // Return to profile list
-            },
-            child: Text(
-              'Remove',
-              style: AppTheme.titleMedium.copyWith(
-                color: Colors.red,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    try {
+      await _profileService.updateProfile(
+        name: _nameController.text.trim(),
+        textToSpeechEnabled: _textToSpeechEnabled,
+      );
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Failed to update profile';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          _buildSection(
-            title: 'Profile Name',
-            child: TextFormField(
-              controller: _nameController,
-              decoration: AppTheme.getInputDecoration(
-                hint: 'Enter profile name',
-                icon: Icons.person_outline,
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a name';
-                }
-                return null;
-              },
-            ),
-          ),
-          _buildSection(
-            title: 'Communication Board',
-            child: Column(
-              children: [
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    'Text-to-Speech',
-                    style: AppTheme.bodyLarge,
-                  ),
-                  value: _textToSpeechEnabled,
-                  onChanged: (value) {
-                    setState(() {
-                      _textToSpeechEnabled = value;
-                    });
-                  },
-                  activeColor: AppTheme.accentGreen,
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    'Communication Board Grid',
-                    style: AppTheme.bodyLarge,
-                  ),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                    color: AppTheme.secondaryBrown,
-                  ),
-                  onTap: () {
-                    // TODO: Navigate to grid settings using wrapper
-                    print('Navigate to grid settings');
-                  },
-                ),
-              ],
-            ),
-          ),
-          _buildSection(
-            title: 'Remove Profile',
-            child: ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(
-                'Remove Profile',
-                style: AppTheme.bodyLarge.copyWith(
-                  color: Colors.red,
-                ),
-              ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: Colors.red,
-              ),
-              onTap: _showRemoveProfileDialog,
-            ),
-          ),
-          const SizedBox(height: 32),
-          Row(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: TextButton(
-                  onPressed: widget.onBack,
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
+              ProfileNameSection(controller: _nameController),
+              const SizedBox(height: 24),
+              CommunicationSection(
+                textToSpeechEnabled: _textToSpeechEnabled,
+                onTextToSpeechChanged: (value) {
+                  setState(() {
+                    _textToSpeechEnabled = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 24),
+              RemoveSection(
+                profileName: widget.profile.name,
+                onRemove: () => _profileService.initiateProfileRemoval(),
+              ),
+              const SizedBox(height: 32),
+              SaveButton(
+                isLoading: _isLoading,
+                onSave: _saveChanges,
+              ),
+              if (_errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
                   child: Text(
-                    'Cancel',
-                    style: AppTheme.buttonTextStyle.copyWith(
-                      color: AppTheme.secondaryBrown,
-                    ),
+                    _errorMessage!,
+                    style: AppTheme.bodyMedium.copyWith(color: Colors.red),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _saveChanges,
-                  style: AppTheme.primaryButtonStyle,
-                  child: const Text(
-                    'Save Changes',
-                    style: AppTheme.buttonTextStyle,
-                  ),
-                ),
-              ),
+              const SizedBox(height: 40),
             ],
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSection({
-    required String title,
-    required Widget child,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: AppTheme.titleMedium,
         ),
-        const SizedBox(height: 12),
-        child,
-        const SizedBox(height: 24),
-      ],
+      ),
     );
   }
 }

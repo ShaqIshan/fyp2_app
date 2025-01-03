@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fyp2_app/Screens/Onboarding_Screens/childs_assessment/assess_wrapper.dart';
 import 'package:fyp2_app/Screens/Onboarding_Screens/child_name/child_name_input.dart';
 import 'package:fyp2_app/Screens/Onboarding_Screens/sign_in_up/sign_wrapper.dart';
 import 'package:fyp2_app/Screens/Onboarding_Screens/welcome/welcome_page.dart';
@@ -7,8 +6,10 @@ import 'package:fyp2_app/Screens/Onboarding_Screens/welcome/welcome_page.dart';
 //firebase,riverpod,login logout imports
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fyp2_app/Screens/child_screens/games_learning_modules_screen/Modules/basic_skills/Inner_modules/animal_matching_games/animal_matching_wrapper.dart';
+import 'package:fyp2_app/Screens/child_screens/child_wrapper.dart';
 import 'package:fyp2_app/Screens/parent_screens/parent_wrapper.dart';
-import 'package:fyp2_app/models/app_user.dart';
+import 'package:fyp2_app/models/parents_models/app_user.dart';
 import 'package:fyp2_app/providers/auth_provider.dart';
 import 'firebase_options.dart';
 
@@ -74,7 +75,7 @@ class MyApp extends StatelessWidget {
               return const ChildNameInput();
             } else {
               // For existing users, go straight to parent wrapper
-              return const ParentWrapper();
+              return ParentWrapper();
             }
 
             // its supposed to be below here but replace for a while to assess
