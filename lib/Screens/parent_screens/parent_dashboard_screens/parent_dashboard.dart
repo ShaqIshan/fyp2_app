@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/settings_wrapper.dart';
-import 'package:fyp2_app/Screens/parent_screens/parent_wrapper.dart';
-import 'package:fyp2_app/Screens/parent_screens/visual_schedule_screen/add_visual_schedule_screen.dart';
-import 'package:fyp2_app/models/child_profile.dart';
+import 'package:fyp2_app/screens/parent_screens/parent_dashboard_screens/components/dashboard_header.dart';
+import 'package:fyp2_app/screens/parent_screens/parent_dashboard_screens/components/recent_activities_section.dart';
+import 'package:fyp2_app/screens/parent_screens/parent_dashboard_screens/components/upcoming_activities_section.dart';
+import 'package:fyp2_app/services/schedule_service.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 import 'package:fyp2_app/shared/shared_parents_screen/activity_card_styles.dart';
 import 'package:fyp2_app/shared/shared_parents_screen/activity_card_widget.dart';
