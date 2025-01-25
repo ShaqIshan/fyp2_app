@@ -6,8 +6,9 @@ import 'package:fyp2_app/Screens/onboarding_screens/child_name/child_name_input.
 import 'package:fyp2_app/screens/parent_screens/bottom_nav_bar_parents/bottom_nav_bar.dart';
 import 'package:fyp2_app/screens/parent_screens/parent_dashboard_screens/parent_dashboard.dart';
 import 'package:fyp2_app/screens/parent_screens/parent_dashboard_screens/settings_screens/settings_wrapper.dart';
-import 'package:fyp2_app/screens/parent_screens/visual_schedule_screen/visual_schedule_screen.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
+
+import 'visual_schedule_screen/screens/visual_schedule_screen.dart';
 
 enum ParentView {
   dashboard,
@@ -85,13 +86,12 @@ class _ParentWrapperState extends State<ParentWrapper> {
           _currentView = ParentView.dashboard;
           break;
         case 1:
-          _currentView = ParentView.learning;
+          _currentView = ParentView.schedule;
+
           break;
         case 2:
           _currentView = ParentView.reports;
-          break;
-        case 3:
-          _currentView = ParentView.schedule;
+
           break;
       }
     });

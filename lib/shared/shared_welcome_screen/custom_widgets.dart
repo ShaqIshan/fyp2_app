@@ -1,5 +1,3 @@
-// lib/widgets/custom_widgets.dart
-
 import 'package:flutter/material.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 

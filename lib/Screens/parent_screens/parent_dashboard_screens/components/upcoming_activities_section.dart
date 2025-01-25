@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fyp2_app/models/schedule.dart';
-import 'package:fyp2_app/screens/parent_screens/visual_schedule_screen/add_visual_schedule_screen.dart';
 import 'package:fyp2_app/services/schedule_service.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 import 'package:fyp2_app/shared/parents_screen_shared/shared_parents_screen/shared_schedule_item_widget.dart';
 import 'package:intl/intl.dart';
+
+import '../../visual_schedule_screen/screens/add_visual_schedule_screen.dart';
 
 class UpcomingActivitiesSection extends StatelessWidget {
   final String selectedChildId;

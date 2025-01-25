@@ -19,7 +19,7 @@ class ChildBottomNav extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         vertical: 12,
-        horizontal: screenWidth * 0.02, // Responsive horizontal padding
+        horizontal: screenWidth * 0.02,
       ),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -47,26 +47,18 @@ class ChildBottomNav extends StatelessWidget {
             _buildNavItem(
               context: context,
               index: 1,
-              icon: Icons.games_rounded,
-              color: Colors.purple,
-              label: 'Games',
+              icon: Icons.grid_view_rounded,
+              color: Colors.green,
+              label: 'AAC Board',
               isSelected: selectedIndex == 1,
             ),
             _buildNavItem(
               context: context,
               index: 2,
-              icon: Icons.grid_view_rounded,
-              color: Colors.green,
-              label: 'AAC Board',
-              isSelected: selectedIndex == 2,
-            ),
-            _buildNavItem(
-              context: context,
-              index: 3,
               icon: Icons.calendar_today_rounded,
               color: Colors.blue,
               label: 'Schedule',
-              isSelected: selectedIndex == 3,
+              isSelected: selectedIndex == 2,
             ),
           ],
         ),
@@ -83,8 +75,7 @@ class ChildBottomNav extends StatelessWidget {
     required bool isSelected,
   }) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double itemWidth =
-        screenWidth / 4.5; // Divide screen into 4.5 parts for each item
+    double itemWidth = screenWidth / 3.5; // Adjusted for 3 items
 
     return GestureDetector(
       onTap: () => onItemSelected(index),
@@ -106,7 +97,7 @@ class ChildBottomNav extends StatelessWidget {
               Icon(
                 icon,
                 color: isSelected ? color : Colors.grey,
-                size: isSelected ? 32 : 28, // Restored original icon sizes
+                size: isSelected ? 32 : 28,
               ),
               const SizedBox(height: 4),
               FittedBox(
