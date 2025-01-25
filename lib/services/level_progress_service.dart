@@ -1,30 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../Screens/child_screens/child_home_screen/home/models/level_progress.dart';
 
 class LevelProgressService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  String? _currentChildId;
 
-  // Get reference to the current user's progress collection
+  // Set current child ID
+  void setCurrentChildId(String childId) {
+    _currentChildId = childId;
+  }
+
+  // Get reference to the current child's progress collection
   CollectionReference<Map<String, dynamic>> _getUserProgressCollection() {
     final userId = _auth.currentUser?.uid;
     if (userId == null) throw Exception('No authenticated user');
+    if (_currentChildId == null) throw Exception('No child selected');
 
     return _firestore
         .collection('users')
         .doc(userId)
+        .collection('children')
+        .doc(_currentChildId)
         .collection('levelProgress');
   }
 
-  // Initialize progress for a new user
-// In level_progress_service.dart
-
   Future<void> initializeUserProgress() async {
     try {
-      final userId = _auth.currentUser?.uid;
-      if (userId == null) throw Exception('No authenticated user');
+      if (_currentChildId == null) throw Exception('No child selected');
 
       final progressCollection = _getUserProgressCollection();
 
@@ -51,18 +55,18 @@ class LevelProgressService {
       await batch.commit();
     } catch (e) {
       print('Error initializing user progress: $e');
-      // Re-throw with more specific error message
       throw Exception('Failed to initialize user progress: ${e.toString()}');
     }
   }
 
-  // Get progress for all levels
   Stream<List<LevelProgress>> getLevelProgress() {
     try {
-      return _getUserProgressCollection()
-          .orderBy('levelId') // Only order by levelId
-          .snapshots()
-          .map((snapshot) => snapshot.docs
+      if (_currentChildId == null) {
+        return Stream.value([]); // Return empty list if no child selected
+      }
+
+      return _getUserProgressCollection().orderBy('levelId').snapshots().map(
+          (snapshot) => snapshot.docs
               .map((doc) => LevelProgress.fromMap(doc.data()))
               .toList());
     } catch (e) {
@@ -71,12 +75,12 @@ class LevelProgressService {
     }
   }
 
-  // Update level progress
   Future<void> updateLevelProgress(LevelProgress progress) async {
     try {
+      if (_currentChildId == null) throw Exception('No child selected');
+
       final progressCollection = _getUserProgressCollection();
 
-      // Create the update data
       final updateData = {
         'levelId': progress.levelId,
         'isCompleted': progress.isCompleted,
@@ -95,7 +99,6 @@ class LevelProgressService {
         final nextLevelId = progress.levelId + 1;
         final nextLevelRef = progressCollection.doc(nextLevelId.toString());
 
-        // Get the current state of the next level
         final nextLevelDoc = await nextLevelRef.get();
 
         if (nextLevelDoc.exists) {
@@ -104,7 +107,6 @@ class LevelProgressService {
             'lastPlayed': DateTime.now().toIso8601String(),
           });
         } else {
-          // If the document doesn't exist, create it
           await nextLevelRef.set({
             'levelId': nextLevelId,
             'isUnlocked': true,
@@ -120,9 +122,10 @@ class LevelProgressService {
     }
   }
 
-  // Get total stars earned
   Future<int> getTotalStars() async {
     try {
+      if (_currentChildId == null) return 0;
+
       final snapshot = await _getUserProgressCollection().get();
       return snapshot.docs.fold<int>(
         0,

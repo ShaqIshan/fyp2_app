@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../../services/level_progress_service.dart';
 import '../components/dialogs/parent_access_dialog.dart';
 
 class ChildHomeHeader extends StatelessWidget {
@@ -26,21 +27,43 @@ class ChildHomeHeader extends StatelessWidget {
       return Stream.value('Friend');
     }
 
-    // Since there's only one child per user currently, let's get the first child
+    // First get the selected child ID from the user document
     return FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
-        .collection('children')
-        .limit(1)
         .snapshots()
-        .map((snapshot) {
-      if (snapshot.docs.isEmpty) {
-        print('No children found');
+        .asyncMap((userDoc) async {
+      print('User doc exists: ${userDoc.exists}');
+      if (!userDoc.exists) {
+        print('No user document found');
         return 'Friend';
       }
 
-      final childDoc = snapshot.docs.first;
-      final name = childDoc.data()['name'] as String? ?? 'Friend';
+      final selectedChildId = userDoc.data()?['selectedChildId'] as String?;
+      print('Selected child ID: $selectedChildId');
+      if (selectedChildId == null) {
+        print('No selected child ID found');
+        return 'Friend';
+      }
+
+      // Get the child document using the selected ID
+      final childDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('children')
+          .doc(selectedChildId)
+          .get();
+
+      print('Child doc exists: ${childDoc.exists}');
+      if (!childDoc.exists) {
+        print('Selected child document not found');
+        return 'Friend';
+      }
+
+      // Set the current child ID in the LevelProgressService
+      LevelProgressService().setCurrentChildId(selectedChildId);
+
+      final name = childDoc.data()?['name'] as String? ?? 'Friend';
       print('Found child name: $name');
       return name;
     });

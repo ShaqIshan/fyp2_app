@@ -23,6 +23,12 @@ class ChildService {
         'userId': userId,
       });
 
+      // Set as selected child if it's the first one
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .set({'selectedChildId': docRef.id}, SetOptions(merge: true));
+
       return docRef.id; // Return the new child's document ID
     } catch (e) {
       print('Error adding child: $e');

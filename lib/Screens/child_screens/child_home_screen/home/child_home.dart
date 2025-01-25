@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 import '../../../../services/level_progress_service.dart';
@@ -5,6 +7,7 @@ import 'components/child_home_header.dart';
 import 'components/journey_path.dart';
 import 'models/level_data.dart';
 import 'models/level_progress.dart';
+import 'dart:async';
 
 class ChildJourneyHome extends StatefulWidget {
   const ChildJourneyHome({super.key});
@@ -15,14 +18,70 @@ class ChildJourneyHome extends StatefulWidget {
 
 class _ChildJourneyHomeState extends State<ChildJourneyHome> {
   final LevelProgressService _progressService = LevelProgressService();
+  late StreamSubscription<DocumentSnapshot> _userSubscription; // Add this line
   late List<LevelData> levels;
   int totalStars = 0;
+  String? currentChildId;
 
   @override
   void initState() {
     super.initState();
     levels = LevelData.getLevels();
-    _initializeProgress();
+    _getCurrentChild();
+    _listenToSelectedChild(); // Add this line
+  }
+
+  Future<void> _getCurrentChild() async {
+    try {
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) return;
+
+      // First get the user document to get the selected child ID
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (!userDoc.exists) return;
+
+      final selectedChildId = userDoc.data()?['selectedChildId'] as String?;
+      if (selectedChildId == null) return;
+
+      // Set the current child ID for progress tracking
+      currentChildId = selectedChildId;
+      _progressService.setCurrentChildId(selectedChildId);
+      await _initializeProgress();
+    } catch (e) {
+      print('Error getting current child: $e');
+    }
+  }
+
+  void _listenToSelectedChild() {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) return;
+
+    _userSubscription = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .snapshots()
+        .listen((userDoc) {
+      if (!userDoc.exists) return;
+
+      final selectedChildId = userDoc.data()?['selectedChildId'] as String?;
+      if (selectedChildId != null && selectedChildId != currentChildId) {
+        setState(() {
+          currentChildId = selectedChildId;
+          _progressService.setCurrentChildId(selectedChildId);
+          _initializeProgress();
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _userSubscription.cancel();
+    super.dispose();
   }
 
   Future<void> _initializeProgress() async {

@@ -52,17 +52,38 @@ class _ParentDashboardState extends State<ParentDashboard> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
-        final snapshot = await FirebaseFirestore.instance
+        // First check if there's already a selected child
+        final userDoc = await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
-            .collection('children')
-            .limit(1)
             .get();
 
-        if (snapshot.docs.isNotEmpty && mounted) {
+        String? childId = userDoc.data()?['selectedChildId'] as String?;
+
+        if (childId == null) {
+          // If no selected child, get the first child
+          final snapshot = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .collection('children')
+              .limit(1)
+              .get();
+
+          if (snapshot.docs.isNotEmpty) {
+            childId = snapshot.docs.first.id;
+            // Set this as the selected child
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(user.uid)
+                .set({'selectedChildId': childId}, SetOptions(merge: true));
+          }
+        }
+
+        if (childId != null && mounted) {
           setState(() {
-            selectedChildId = snapshot.docs.first.id;
+            selectedChildId = childId;
           });
+          widget.onChildSelected(childId);
         }
       } catch (e) {
         debugPrint('Error loading initial child: $e');
@@ -70,7 +91,16 @@ class _ParentDashboardState extends State<ParentDashboard> {
     }
   }
 
-  void _handleChildSelection(String childId) {
+  void _handleChildSelection(String childId) async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) return;
+
+    // Update the selected child ID in the user document
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .set({'selectedChildId': childId}, SetOptions(merge: true));
+
     setState(() {
       selectedChildId = childId;
     });
