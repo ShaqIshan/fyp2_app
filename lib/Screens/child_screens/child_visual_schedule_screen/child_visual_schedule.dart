@@ -21,6 +21,7 @@ class _ChildVisualScheduleState extends State<ChildVisualSchedule>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   String _selectedPeriod = 'morning';
+  String? selectedChildId;
 
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _ChildVisualScheduleState extends State<ChildVisualSchedule>
     );
     _controller.forward();
     _selectedPeriod = ScheduleTimeHelper.getCurrentPeriod();
+    _getCurrentChild(); // Add this
   }
 
   @override
@@ -46,6 +48,27 @@ class _ChildVisualScheduleState extends State<ChildVisualSchedule>
       _controller.reset();
       _controller.forward();
     });
+  }
+
+  Future<void> _getCurrentChild() async {
+    try {
+      final userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) return;
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (mounted) {
+        setState(() {
+          selectedChildId = userDoc.data()?['selectedChildId'] as String?;
+          print('Current selected child ID: $selectedChildId'); // Debug print
+        });
+      }
+    } catch (e) {
+      print('Error getting current child: $e');
+    }
   }
 
   @override
@@ -66,6 +89,7 @@ class _ChildVisualScheduleState extends State<ChildVisualSchedule>
                     .collection('users')
                     .doc(FirebaseAuth.instance.currentUser?.uid)
                     .collection('schedules')
+                    .where('childId', isEqualTo: selectedChildId)
                     .where('startTime',
                         isGreaterThanOrEqualTo: DateTime(
                           DateTime.now().year,

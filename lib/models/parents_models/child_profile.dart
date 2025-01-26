@@ -10,8 +10,4 @@ class ChildProfile {
     this.textToSpeechEnabled = true,
     this.communicationBoardGrid,
   });
-
-  // TODO: Add fromMap and toMap methods for Firebase integration
-  // static ChildProfile fromMap(Map<String, dynamic> map) { ... }
-  // Map<String, dynamic> toMap() { ... }
 }

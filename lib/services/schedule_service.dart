@@ -49,6 +49,8 @@ class ScheduleService {
     if (userId == null) throw Exception('No user logged in');
     if (childId.isEmpty) return Stream.value([]);
 
+    print('Getting schedules for childId: $childId'); // Debug print
+
     // Get current date (not time)
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -64,6 +66,11 @@ class ScheduleService {
           .orderBy('startTime')
           .snapshots()
           .map((snapshot) {
+        print('Found ${snapshot.docs.length} schedules'); // Debug print
+        snapshot.docs.forEach((doc) {
+          print('Schedule data: ${doc.data()}'); // Print each schedule
+        });
+
         try {
           final schedules = snapshot.docs
               .map((doc) => Schedule.fromMap(doc.id, doc.data()))

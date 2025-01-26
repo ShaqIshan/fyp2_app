@@ -1,5 +1,3 @@
-// lib/models/schedule.dart
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Schedule {
@@ -34,6 +32,7 @@ class Schedule {
 
   factory Schedule.fromMap(String id, Map<String, dynamic> map) {
     try {
+      print('Parsing schedule data: $map'); // Debug print
       return Schedule(
         id: id,
         childId: map['childId'] ?? '',

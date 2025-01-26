@@ -77,6 +77,8 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
   }
 
   Future<void> _saveSchedule() async {
+    print(
+        'Creating schedule for childId: ${widget.selectedChildId}'); // Debug print
     if (!_validateInputs()) return;
 
     setState(() => _isLoading = true);
@@ -91,10 +93,16 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
         _endTime,
       );
 
+      print('Start time: $startDateTime'); // Debug print
+      print('End time: $endDateTime'); // Debug print
+
       // Get existing schedules for conflict check
       final existingSchedules = await _scheduleService
           .getSchedulesForDate(widget.selectedChildId, _selectedDate)
           .first;
+
+      print(
+          'Existing schedules count: ${existingSchedules.length}'); // Debug print
 
       // Check for time conflicts
       final hasConflict = await ScheduleHelpers.hasTimeConflict(
@@ -117,6 +125,8 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
         endTime: endDateTime,
         category: _selectedCategory?.name ?? 'Activity',
       );
+
+      print('Creating schedule with data: ${schedule.toMap()}'); // Debug prints
 
       await _scheduleService.addSchedule(schedule);
 
