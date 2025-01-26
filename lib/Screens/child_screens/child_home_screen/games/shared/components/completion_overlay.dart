@@ -34,7 +34,7 @@ class CompletionData {
           title: 'Amazing!',
           message: 'You completed the puzzle!',
           primaryButtonText: 'Next Puzzle',
-          secondaryButtonText: 'Try Again',
+          secondaryButtonText: 'Later',
           icon: Icons.celebration,
           accentColor: AppTheme.childSoftGreen,
         );
@@ -43,7 +43,7 @@ class CompletionData {
           title: 'Amazing!',
           message: 'You completed the path!',
           primaryButtonText: 'Next Activity',
-          secondaryButtonText: 'Try Again',
+          secondaryButtonText: 'Later',
           icon: Icons.celebration,
           accentColor: AppTheme.childSoftGreen,
         );
@@ -53,7 +53,7 @@ class CompletionData {
             title: 'Fantastic!',
             message: 'You\'ve completed all activities!',
             primaryButtonText: 'Complete!',
-            secondaryButtonText: 'Try Again',
+            secondaryButtonText: 'Later',
             icon: Icons.celebration,
             accentColor: AppTheme.childSoftGreen,
           );
@@ -62,7 +62,7 @@ class CompletionData {
           title: 'Amazing!',
           message: 'You made a perfect shape!',
           primaryButtonText: 'Next Shape',
-          secondaryButtonText: 'Try Again',
+          secondaryButtonText: 'Later',
           icon: Icons.auto_awesome,
           accentColor: AppTheme.childSoftGreen,
         );
@@ -164,10 +164,11 @@ class CompletionOverlay extends StatelessWidget {
           _buildButton(
             data.secondaryButtonText!,
             AppTheme.childTurquoise,
-            Icons.replay_rounded,
+            Icons.watch_later_rounded,
             () {
-              Navigator.of(context).pop();
-              onSecondaryAction!();
+              Navigator.of(context).pop(); // Pop dialog
+              Navigator.of(context)
+                  .pop(); // Pop level screen to go back to home
             },
           ),
         ],

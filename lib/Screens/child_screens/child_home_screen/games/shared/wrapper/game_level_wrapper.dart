@@ -13,6 +13,8 @@ class GameLevelWrapper extends StatefulWidget {
   final bool showTimer;
   final bool isCompleted;
   final bool preventPop;
+  final VoidCallback? onTimeUp;
+  final bool isPaused;
 
   const GameLevelWrapper({
     super.key,
@@ -23,6 +25,8 @@ class GameLevelWrapper extends StatefulWidget {
     this.showTimer = true,
     this.isCompleted = false,
     this.preventPop = false,
+    this.onTimeUp,
+    this.isPaused = false,
   });
 
   @override
@@ -35,6 +39,10 @@ class _GameLevelWrapperState extends State<GameLevelWrapper> {
 
   void _handleTimeUp() {
     if (widget.isCompleted || !mounted) return;
+
+    // Call the widget's onTimeUp callback if provided
+    widget.onTimeUp?.call();
+
     setState(() {
       _isPaused = true;
     });
@@ -43,7 +51,10 @@ class _GameLevelWrapperState extends State<GameLevelWrapper> {
         context: context,
         barrierDismissible: false,
         builder: (context) => TimeUpDialog(
-          onTryAgain: _resetTimer,
+          onTryAgain: () {
+            _resetTimer();
+            Navigator.of(context).pop(); // Close dialog first
+          },
         ),
       );
     }
@@ -72,7 +83,7 @@ class _GameLevelWrapperState extends State<GameLevelWrapper> {
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.fromLTRB(4, 16, 24, 16),
+                padding: const EdgeInsets.fromLTRB(8, 16, 16, 16),
                 decoration: BoxDecoration(
                   color: AppTheme.childCream,
                   borderRadius: const BorderRadius.vertical(
@@ -88,9 +99,13 @@ class _GameLevelWrapperState extends State<GameLevelWrapper> {
                 ),
                 child: Row(
                   children: [
+                    // Back button
                     IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      color: AppTheme.childTurquoise,
+                      icon: const Icon(
+                        Icons.arrow_back_ios_rounded,
+                        color: AppTheme.childTurquoise,
+                        size: 24,
+                      ),
                       onPressed: widget.onBackPressed ??
                           () {
                             if (mounted && !widget.preventPop) {
@@ -98,20 +113,45 @@ class _GameLevelWrapperState extends State<GameLevelWrapper> {
                             }
                           },
                     ),
-                    Expanded(
-                      child: Text(
-                        widget.title,
-                        style: AppTheme.childHeadingMedium.copyWith(
-                          color: AppTheme.childTurquoise,
-                        ),
-                      ),
-                    ),
+                    // Timer section
                     if (widget.showTimer && !widget.isCompleted)
-                      GameTimer(
-                        key: _timerKey,
-                        onTimeUp: _handleTimeUp,
-                        isPaused: _isPaused,
-                        isCompleted: widget.isCompleted,
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.timer_outlined,
+                                color: AppTheme.childTurquoise,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: GameTimer(
+                                  key: _timerKey,
+                                  onTimeUp: _handleTimeUp,
+                                  isPaused: widget.isPaused ||
+                                      _isPaused, // Consider both local and widget pause states
+                                  isCompleted: widget.isCompleted,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     if (widget.score != null) ...[
                       const SizedBox(width: 16),

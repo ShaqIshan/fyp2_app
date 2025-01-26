@@ -52,17 +52,18 @@ class TimeUpDialog extends StatelessWidget {
                 'Play Now!',
                 AppTheme.childSoftGreen,
                 Icons.play_circle_rounded,
-                () {
-                  Navigator.of(context).pop();
-                  onTryAgain();
-                },
+                onTryAgain, // Directly use onTryAgain without navigation
               ),
               const SizedBox(height: 12),
               _buildButton(
                 'Later',
                 AppTheme.childTurquoise,
                 Icons.watch_later_rounded,
-                () => Navigator.of(context).pop(),
+                () {
+                  Navigator.of(context).pop(); // Pop the dialog
+                  Navigator.of(context)
+                      .pop(); // Pop the current level screen to go back to child home
+                },
               ),
             ],
           ),

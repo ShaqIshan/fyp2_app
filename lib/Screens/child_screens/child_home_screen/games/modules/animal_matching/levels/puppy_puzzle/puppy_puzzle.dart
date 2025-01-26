@@ -24,6 +24,8 @@ class _PuppyPuzzleState extends State<PuppyPuzzle> {
   static const double puzzleAreaRatio = 0.45;
   late double puzzleAreaSize;
   bool showSuccess = false;
+  bool _isPaused = false; // Add at the top with other state variables
+
   Map<String, bool> placedPieces = {
     'head': false,
     'body': false,
@@ -38,7 +40,16 @@ class _PuppyPuzzleState extends State<PuppyPuzzle> {
         'tail': false,
       };
       showSuccess = false;
+      _isPaused = false; // Add this line to unpause when resetting
     });
+  }
+
+  void _handleTimeUp() {
+    if (!mounted) return;
+    setState(() {
+      _isPaused = true;
+    });
+    _resetPuzzle();
   }
 
   void _handlePiecePlaced(String pieceId, bool isPlaced) {
@@ -77,6 +88,8 @@ class _PuppyPuzzleState extends State<PuppyPuzzle> {
       title: 'Animal Puzzles',
       score: placedPieces.values.where((placed) => placed).length,
       isCompleted: showSuccess,
+      onTimeUp: _handleTimeUp, // Add this
+      isPaused: _isPaused, // Add this
       child: StandardThreePiecePuzzle(
         puzzleAreaSize: puzzleAreaSize,
         referenceImage: 'assets/puzzles/puppy_complete.png',

@@ -32,7 +32,7 @@ class _ChildVisualScheduleState extends State<ChildVisualSchedule>
     );
     _controller.forward();
     _selectedPeriod = ScheduleTimeHelper.getCurrentPeriod();
-    _getCurrentChild(); // Add this
+    _getCurrentChild();
   }
 
   @override

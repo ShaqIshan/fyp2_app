@@ -27,6 +27,7 @@ class _BunnyPathLevelState extends State<BunnyPathLevel> {
   bool showSuccess = false;
   bool validStart = false;
   bool showInstructions = true;
+  bool _isPaused = false;
 
   void _handlePathCompletion(BoxConstraints constraints) {
     if (!mounted || pathCompleted || !validStart || userPath.isEmpty) return;
@@ -74,6 +75,14 @@ class _BunnyPathLevelState extends State<BunnyPathLevel> {
     }
   }
 
+  void _handleTimeUp() {
+    if (!mounted) return;
+    setState(() {
+      _isPaused = true;
+    });
+    _resetLevel();
+  }
+
   void _resetLevel() {
     if (!mounted) return; // Add mounted check
     setState(() {
@@ -81,6 +90,7 @@ class _BunnyPathLevelState extends State<BunnyPathLevel> {
       pathCompleted = false;
       showSuccess = false;
       validStart = false;
+      _isPaused = false; // Add this line to unpause when resetting
     });
   }
 
@@ -165,6 +175,9 @@ class _BunnyPathLevelState extends State<BunnyPathLevel> {
 
     return GameLevelWrapper(
       title: 'Drawing Practice',
+      onTimeUp: _handleTimeUp,
+      isPaused: _isPaused,
+      isCompleted: showSuccess,
       child: Stack(
         children: [
           LayoutBuilder(

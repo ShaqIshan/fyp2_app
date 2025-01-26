@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 import '../../../../../../child_wrapper.dart';
 import '../../../../shared/components/completion_overlay.dart';
+import '../../../../shared/components/time_up_dialog.dart';
 import '../../../../shared/wrapper/game_level_wrapper.dart';
 import '../../components/star_shapes_components/star_path_painter.dart';
 import '../../components/star_shapes_components/star_shapes_components.dart';
@@ -35,6 +36,7 @@ class _StarShapesLevelState extends State<StarShapesLevel> {
   late List<Offset> starPositions;
   late List<List<Offset>> validConnections;
   bool isValidConnection = false;
+  bool _isPaused = false; // Add this
 
   void _handlePanStart(DragStartDetails details, List<Offset> starPositions) {
     if (!mounted || showSuccess) return;
@@ -137,6 +139,14 @@ class _StarShapesLevelState extends State<StarShapesLevel> {
     );
   }
 
+  void _handleTimeUp() {
+    if (!mounted) return;
+    setState(() {
+      _isPaused = true;
+    });
+    _resetLevel();
+  }
+
   void _resetLevel() {
     if (!mounted) return;
     setState(() {
@@ -145,6 +155,7 @@ class _StarShapesLevelState extends State<StarShapesLevel> {
       isDrawing = false;
       showSuccess = false;
       isValidConnection = false;
+      _isPaused = false; // Add this line to unpause when resetting
     });
   }
 
@@ -153,6 +164,8 @@ class _StarShapesLevelState extends State<StarShapesLevel> {
     return GameLevelWrapper(
       title: 'Drawing Practice',
       isCompleted: showSuccess,
+      onTimeUp: _handleTimeUp, // Add this
+      isPaused: _isPaused, // Add this
       child: LayoutBuilder(
         builder: (context, constraints) {
           final size = Size(constraints.maxWidth, constraints.maxHeight);
