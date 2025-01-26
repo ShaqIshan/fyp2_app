@@ -12,7 +12,7 @@ class GameTimer extends StatefulWidget {
 
   const GameTimer({
     super.key,
-    this.durationInSeconds = 5,
+    this.durationInSeconds = 60,
     required this.onTimeUp,
     this.isPaused = false,
     this.isCompleted = false,

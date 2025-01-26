@@ -5,14 +5,10 @@ import 'package:fyp2_app/models/parents_models/app_user.dart';
 class AuthService {
   static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  // Add this to track signup vs signin
   static bool _isNewSignup = false;
 
-  // Getter for signup status
   static bool get isNewSignup => _isNewSignup;
 
-  // sign up a new user
-  // (?) means the (AppUser) value can be null
   static Future<AppUser?> signUp(String email, String password) async {
     try {
       print("\n--- Sign Up Attempt ---");

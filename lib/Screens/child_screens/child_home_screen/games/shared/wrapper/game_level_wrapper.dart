@@ -73,6 +73,35 @@ class _GameLevelWrapperState extends State<GameLevelWrapper> {
     return true;
   }
 
+  Widget _buildStars() {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 8,
+      ),
+      decoration: BoxDecoration(
+        color: AppTheme.childYellow.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.star,
+            color: AppTheme.childYellow,
+            size: 20,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '3',
+            style: AppTheme.childTitleLarge
+                .copyWith(color: AppTheme.childYellow, fontSize: 16),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -153,35 +182,8 @@ class _GameLevelWrapperState extends State<GameLevelWrapper> {
                           ),
                         ),
                       ),
-                    if (widget.score != null) ...[
-                      const SizedBox(width: 16),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppTheme.childYellow.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.star,
-                              color: AppTheme.childYellow,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              widget.score.toString(),
-                              style: AppTheme.childTitleLarge.copyWith(
-                                  color: AppTheme.childYellow, fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    const SizedBox(width: 16),
+                    _buildStars(),
                   ],
                 ),
               ),

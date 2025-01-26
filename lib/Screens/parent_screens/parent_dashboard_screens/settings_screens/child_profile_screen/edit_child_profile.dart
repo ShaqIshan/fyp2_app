@@ -92,15 +92,6 @@ class _EditChildProfileState extends State<EditChildProfile> {
             children: [
               ProfileNameSection(controller: _nameController),
               const SizedBox(height: 24),
-              CommunicationSection(
-                textToSpeechEnabled: _textToSpeechEnabled,
-                onTextToSpeechChanged: (value) {
-                  setState(() {
-                    _textToSpeechEnabled = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 24),
               RemoveSection(
                 profileName: widget.profile.name,
                 onRemove: () => _profileService.initiateProfileRemoval(),

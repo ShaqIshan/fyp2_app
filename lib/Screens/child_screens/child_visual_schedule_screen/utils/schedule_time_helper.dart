@@ -22,14 +22,14 @@ class ScheduleTimeHelper {
   static String getPeriodFromDateTime(DateTime dateTime) {
     final hour = dateTime.hour;
     if (hour >= 0 && hour < 12) return 'morning';
-    if (hour >= 12 && hour < 17) return 'afternoon';
+    if (hour >= 12 && hour < 18) return 'afternoon';
     return 'night';
   }
 
   static String getCurrentPeriod() {
     final now = TimeOfDay.now();
     if (now.hour >= 5 && now.hour < 12) return 'morning';
-    if (now.hour >= 12 && now.hour < 17) return 'afternoon';
+    if (now.hour >= 12 && now.hour < 18) return 'afternoon';
     return 'night';
   }
 
