@@ -26,7 +26,7 @@ class TimeUpDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(
-                Icons.star_rounded,
+                Icons.favorite_rounded,
                 size: 64,
                 color: Colors.amber,
               ),
@@ -40,7 +40,7 @@ class TimeUpDialog extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'You\'ve got a star!\nLet\'s do faster to get more stars',
+                'You did great! Lets try again, just a little faster',
                 textAlign: TextAlign.center,
                 style: AppTheme.childBodyText.copyWith(
                   color: AppTheme.childTurquoise.withOpacity(0.8),

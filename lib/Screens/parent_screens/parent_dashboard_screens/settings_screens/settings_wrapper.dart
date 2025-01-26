@@ -12,7 +12,8 @@ import 'package:fyp2_app/shared/parents_screen_shared/settings_language/language
 
 import '../../../../providers/auth_provider.dart';
 import '../../../../services/account_deletion_service.dart';
-import '../../../Onboarding_Screens/welcome/welcome_page.dart';
+import '../../../Onboarding_Screens/sign_in_up/sign_wrapper.dart';
+import '../../../Onboarding_Screens/welcome/welcome_flow.dart';
 
 class SettingsWrapper extends ConsumerStatefulWidget {
   // Changed to StatefulWidget
@@ -112,7 +113,14 @@ class _SettingsWrapperState extends ConsumerState<SettingsWrapper> {
                       print("Navigating to welcome page");
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
-                            builder: (context) => const WelcomePage()),
+                          builder: (context) => WelcomeFlow(
+                            onComplete: () => Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SignParent()),
+                            ),
+                          ),
+                        ),
                         (route) => false,
                       );
                     }

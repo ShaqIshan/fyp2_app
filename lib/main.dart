@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:fyp2_app/Screens/Onboarding_Screens/child_name/child_name_input.dart';
 import 'package:fyp2_app/Screens/Onboarding_Screens/sign_in_up/sign_wrapper.dart';
-import 'package:fyp2_app/Screens/Onboarding_Screens/welcome/welcome_page.dart';
 
 //firebase,riverpod,login logout imports
 import 'package:firebase_core/firebase_core.dart';
@@ -14,6 +13,7 @@ import 'package:fyp2_app/Screens/parent_screens/parent_wrapper.dart';
 import 'package:fyp2_app/models/parents_models/app_user.dart';
 import 'package:fyp2_app/providers/auth_provider.dart';
 import 'firebase_options.dart';
+import 'screens/Onboarding_Screens/welcome/welcome_flow.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,7 +60,12 @@ class MyApp extends ConsumerWidget {
             data: (value) {
               if (value == null) {
                 print("Navigating to WelcomePage");
-                return const WelcomePage();
+                return WelcomeFlow(
+                  onComplete: () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SignParent()),
+                  ),
+                );
               }
               final isNewSignup = ref.watch(isNewSignupProvider);
               if (isNewSignup) {
