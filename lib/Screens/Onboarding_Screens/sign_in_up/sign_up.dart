@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fyp2_app/services/auth_service.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 
+import '../child_name/child_name_input.dart';
+
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
 
@@ -64,9 +66,7 @@ class _SignUpState extends State<SignUp> {
           ),
           const SizedBox(height: 20),
 
-          // Password with visibility toggle
           TextFormField(
-            //controller is something thatll store the value of whatever the user types into this field. we create the controller and associate it with the (TextFormField)
             controller: _passwordController,
             obscureText:
                 !_showPassword, // black circles in the inputfield [hidden]
@@ -129,22 +129,30 @@ class _SignUpState extends State<SignUp> {
             height: 56,
             child: ElevatedButton(
               onPressed: () async {
-                // when we call this method it will find each validate functions and if 1 of validation (_formKey.currentState!.validate()) becomes false and if all is passed it becomes true
+                print("\n--- Sign Up Button Pressed ---");
                 if (_formKey.currentState!.validate()) {
                   setState(() {
                     _errorFeedback = null;
                   });
 
-                  final username = _usernameController.text.trim();
                   final email = _emailController.text.trim();
                   final password = _passwordController.text.trim();
 
+                  print("Attempting signup with email: $email");
                   final user = await AuthService.signUp(email, password);
-                  // error feedback
+                  print("Signup result: ${user?.email}");
+
                   if (user == null) {
                     setState(() {
                       _errorFeedback = 'Could not sign up with those details.';
                     });
+                  } else if (context.mounted) {
+                    // Force navigation to ChildNameInput
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const ChildNameInput()),
+                      (route) => false,
+                    );
                   }
                 }
               },

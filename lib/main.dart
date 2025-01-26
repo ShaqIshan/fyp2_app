@@ -36,46 +36,49 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    print("\n--- MyApp Build Called ---"); // Debug print
+
     return MaterialApp(
-        title: 'MultiTalk AAC',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: Consumer(builder: (context, ref, child) {
+      title: 'MultiTalk AAC',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: Consumer(
+        builder: (context, ref, child) {
           final AsyncValue<AppUser?> user = ref.watch(authProvider);
-          return user.when(data: (value) {
-            print("\n--- Main.dart Navigation Debug ---");
-            print("Auth state value: ${value?.email}");
-            final isNewSignup = ref.watch(isNewSignupProvider);
-            print("IsNewSignup value: $isNewSignup");
-            print(
-                "Current navigation target: ${value == null ? 'WelcomePage' : isNewSignup ? 'ChildNameInput' : 'ParentWrapper'}");
-            print("--------------------------------\n");
-            // user isnt logged in
-            if (value == null) {
-              return const WelcomePage();
-            }
-            if (isNewSignup) {
-              // For new signups, show child name input
-              return const ChildNameInput();
-            } else {
-              // For existing users, go straight to parent wrapper
+
+          print("\n--- Main.dart Navigation Debug ---");
+          print("Auth state changing. Current state: ${user.value?.email}");
+
+          return user.when(
+            data: (value) {
+              if (value == null) {
+                print("Navigating to WelcomePage");
+                return const WelcomePage();
+              }
+              final isNewSignup = ref.watch(isNewSignupProvider);
+              if (isNewSignup) {
+                return const ChildNameInput();
+              }
               return ParentWrapper();
-            }
-          }, error: (error, stack) {
-            print("Auth error: $error"); // Debug print
-            return const Text('Error Loading Auth Status...');
-          }, loading: () {
-            print("Auth loading..."); // Debug print
-            return const CircularProgressIndicator();
-          });
-        }));
+            },
+            error: (error, stack) {
+              print("Auth error: $error");
+              return const Text('Error Loading Auth Status...');
+            },
+            loading: () {
+              print("Auth loading...");
+              return const CircularProgressIndicator();
+            },
+          );
+        },
+      ),
+    );
   }
 }

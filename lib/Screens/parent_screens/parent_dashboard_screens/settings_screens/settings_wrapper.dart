@@ -1,5 +1,7 @@
 // lib/screens/settings/settings_wrapper.dart
 
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/settings_screens/child_profile_screen/child_profile_wrapper.dart';
@@ -7,6 +9,10 @@ import 'package:fyp2_app/Screens/parent_screens/parent_dashboard_screens/setting
 import 'package:fyp2_app/services/auth_service.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 import 'package:fyp2_app/shared/parents_screen_shared/settings_language/language_selector_widget.dart';
+
+import '../../../../providers/auth_provider.dart';
+import '../../../../services/account_deletion_service.dart';
+import '../../../Onboarding_Screens/welcome/welcome_page.dart';
 
 class SettingsWrapper extends ConsumerStatefulWidget {
   // Changed to StatefulWidget
@@ -56,7 +62,6 @@ class _SettingsWrapperState extends ConsumerState<SettingsWrapper> {
                 'Edit Personal Details',
                 Icons.person_outline,
                 onTap: () {
-                  // TODO: Navigate to edit personal details screen
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -68,7 +73,6 @@ class _SettingsWrapperState extends ConsumerState<SettingsWrapper> {
                 'Child Profile Management',
                 Icons.child_care_outlined,
                 onTap: () {
-                  // TODO: Navigate to child profile management screen
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -78,24 +82,15 @@ class _SettingsWrapperState extends ConsumerState<SettingsWrapper> {
               ),
               const SizedBox(height: 24),
 
-              _buildSectionTitle('App Preferences'),
-              _buildLanguageSelector(),
-              const SizedBox(height: 24),
+              _buildSectionTitle('Account Deletion'),
 
-              _buildSectionTitle('Data Management'),
-              _buildSettingsItem(
-                'Export Data',
-                Icons.download_outlined,
-                onTap: () {
-                  // TODO: Handle data export
-                },
-              ),
               _buildSettingsItem(
                 'Delete Account',
                 Icons.delete_outline,
                 textColor: Colors.red,
                 onTap: () {
-                  // TODO: Show delete account confirmation
+                  final deletionService = AccountDeletionService(context);
+                  deletionService.initiateAccountDeletion();
                 },
               ),
               const SizedBox(height: 24),
@@ -109,8 +104,18 @@ class _SettingsWrapperState extends ConsumerState<SettingsWrapper> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () async {
+                    print("\n--- Logout Button Pressed ---");
                     await AuthService.signOut();
-                    // Note: No navigation needed as auth provider will handle redirect
+                    if (context.mounted) {
+                      print("Forcing auth provider refresh");
+                      ref.refresh(authProvider);
+                      print("Navigating to welcome page");
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => const WelcomePage()),
+                        (route) => false,
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
