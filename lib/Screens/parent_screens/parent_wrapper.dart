@@ -8,6 +8,7 @@ import 'package:fyp2_app/screens/parent_screens/parent_dashboard_screens/parent_
 import 'package:fyp2_app/screens/parent_screens/parent_dashboard_screens/settings_screens/settings_wrapper.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
 
+import 'report_screen/reports_screen/reports_screen.dart';
 import 'visual_schedule_screen/screens/visual_schedule_screen.dart';
 
 enum ParentView {
@@ -166,10 +167,11 @@ class _ParentWrapperState extends State<ParentWrapper> {
         );
 
       case ParentView.learning:
-        return const Placeholder(key: Key('learning'));
-
       case ParentView.reports:
-        return const Placeholder(key: Key('reports'));
+        if (selectedChildId == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return ReportsScreen(selectedChildId: selectedChildId!);
 
       case ParentView.schedule:
         if (selectedChildId == null) {

@@ -185,6 +185,11 @@ class _ChildJourneyHomeState extends State<ChildJourneyHome> {
   }
 
   void _startLevel(LevelData level) {
+    if (currentChildId == null) {
+      print('Error: No child selected');
+      return;
+    }
+
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -213,6 +218,7 @@ class _ChildJourneyHomeState extends State<ChildJourneyHome> {
               _startLevel(levels[nextIndex]);
             }
           },
+          childId: currentChildId ?? '', // Add this line
         ),
       ),
     );

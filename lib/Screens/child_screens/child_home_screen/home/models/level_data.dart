@@ -44,12 +44,14 @@ class LevelData {
   Widget getGameScreen({
     required Function(int) onComplete,
     required VoidCallback onNext,
+    required String childId, // Add this
   }) {
     switch (id) {
       case 1: // Cat Puzzle
         return CatPuzzle(
           onScoreUpdate: onComplete,
           onNext: onNext,
+          childId: childId, // Add this
         );
       case 2: // Bunny Path
         return BunnyPathLevel(
@@ -57,11 +59,13 @@ class LevelData {
           onSuccess: () {
             onNext();
           },
+          childId: childId, // Add this
         );
       case 3: // Rabbit Puzzle
         return RabbitPuzzle(
           onScoreUpdate: onComplete,
           onNext: onNext,
+          childId: childId, // Add this
         );
       case 4: // Triangle Stars
         return StarShapesLevel(
@@ -75,11 +79,13 @@ class LevelData {
             onComplete(3);
             onNext();
           },
+          childId: childId, // Add this
         );
       case 5: // Puppy Puzzle
         return PuppyPuzzle(
           onScoreUpdate: onComplete,
           onNext: onNext,
+          childId: childId, // Add this
         );
       case 6: // Square Stars
         return StarShapesLevel(
@@ -90,6 +96,7 @@ class LevelData {
             onNext();
           },
           onGameComplete: () => onComplete(3),
+          childId: childId, // Add this
         );
       default:
         return const Placeholder();

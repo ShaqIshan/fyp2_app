@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
+import '../../../../../../services/report_activity_timer_service.dart';
 import '../components/game_timer.dart';
 import '../components/time_up_dialog.dart';
 
@@ -15,6 +16,7 @@ class GameLevelWrapper extends StatefulWidget {
   final bool preventPop;
   final VoidCallback? onTimeUp;
   final bool isPaused;
+  final String childId;
 
   const GameLevelWrapper({
     super.key,
@@ -27,6 +29,7 @@ class GameLevelWrapper extends StatefulWidget {
     this.preventPop = false,
     this.onTimeUp,
     this.isPaused = false,
+    required this.childId,
   });
 
   @override
@@ -36,6 +39,20 @@ class GameLevelWrapper extends StatefulWidget {
 class _GameLevelWrapperState extends State<GameLevelWrapper> {
   bool _isPaused = false;
   Key _timerKey = UniqueKey();
+  final ActivityTimerService _timerService = ActivityTimerService();
+
+  @override
+  void initState() {
+    super.initState();
+    // Start tracking only when game starts
+    _timerService.startTracking(widget.childId);
+  }
+
+  @override
+  void dispose() {
+    _timerService.stopTracking();
+    super.dispose();
+  }
 
   void _handleTimeUp() {
     if (widget.isCompleted || !mounted) return;
@@ -46,6 +63,8 @@ class _GameLevelWrapperState extends State<GameLevelWrapper> {
     setState(() {
       _isPaused = true;
     });
+    _timerService.stopTracking(); // Stop tracking when time is up
+
     if (mounted) {
       showDialog(
         context: context,
@@ -53,6 +72,8 @@ class _GameLevelWrapperState extends State<GameLevelWrapper> {
         builder: (context) => TimeUpDialog(
           onTryAgain: () {
             _resetTimer();
+            _timerService.startTracking(widget.childId); // Restart tracking
+
             Navigator.of(context).pop(); // Close dialog first
           },
         ),

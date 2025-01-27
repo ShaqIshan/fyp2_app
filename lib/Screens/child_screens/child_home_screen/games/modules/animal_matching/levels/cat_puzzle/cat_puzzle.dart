@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../../../../services/report_progress_service.dart';
 import '../../../../shared/components/completion_overlay.dart';
 import '../../../../shared/wrapper/game_level_wrapper.dart';
 import '../../components/puzzle_components/concrete_puzzle.dart';
@@ -8,11 +9,13 @@ import '../../components/puzzle_components/two_piece_puzzle.dart';
 class CatPuzzle extends StatefulWidget {
   final Function(int) onScoreUpdate;
   final VoidCallback onNext;
+  final String childId;
 
   const CatPuzzle({
     super.key,
     required this.onScoreUpdate,
     required this.onNext,
+    required this.childId, // Add this
   });
 
   @override
@@ -57,7 +60,15 @@ class _CatPuzzleState extends State<CatPuzzle> {
 
       if (placedPieces.values.every((placed) => placed)) {
         showSuccess = true;
-        widget.onScoreUpdate(3);
+        final starsEarned = 3; // Define starsEarned before using it
+        widget.onScoreUpdate(starsEarned);
+
+        final progressService = ProgressService();
+        progressService.updateProgress(
+          childId: widget.childId,
+          starsCollected: starsEarned,
+          minutesPlayed: null, // We'll handle time separately
+        );
 
         if (mounted) {
           showDialog(
@@ -94,6 +105,7 @@ class _CatPuzzleState extends State<CatPuzzle> {
       isCompleted: showSuccess,
       onTimeUp: _handleTimeUp, // Add this
       isPaused: _isPaused, // Add this
+      childId: widget.childId, // Add this
       child: StandardTwoPiecePuzzle(
         puzzleAreaSize: puzzleAreaSize,
         referenceImage: 'assets/puzzles/cat_complete.png',

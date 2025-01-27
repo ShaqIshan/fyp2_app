@@ -1,6 +1,7 @@
 // lib/screens/child/games/modules/animal_matching/levels/puppy_puzzle/puppy_puzzle.dart
 
 import 'package:flutter/material.dart';
+import '../../../../../../../../services/report_progress_service.dart';
 import '../../../../shared/components/completion_overlay.dart';
 import '../../../../shared/wrapper/game_level_wrapper.dart';
 import '../../components/puzzle_components/concrete_puzzle.dart';
@@ -9,11 +10,13 @@ import '../../components/puzzle_components/three_piece_puzzle.dart';
 class PuppyPuzzle extends StatefulWidget {
   final Function(int) onScoreUpdate;
   final VoidCallback onNext;
+  final String childId;
 
   const PuppyPuzzle({
     super.key,
     required this.onScoreUpdate,
     required this.onNext,
+    required this.childId,
   });
 
   @override
@@ -58,7 +61,15 @@ class _PuppyPuzzleState extends State<PuppyPuzzle> {
 
       if (placedPieces.values.every((placed) => placed)) {
         showSuccess = true;
-        widget.onScoreUpdate(3);
+        final starsEarned = 3; // Define starsEarned before using it
+        widget.onScoreUpdate(starsEarned);
+
+        final progressService = ProgressService();
+        progressService.updateProgress(
+          childId: widget.childId,
+          starsCollected: starsEarned,
+          minutesPlayed: null, // We'll handle time separately
+        );
 
         showDialog(
           context: context,
@@ -90,6 +101,7 @@ class _PuppyPuzzleState extends State<PuppyPuzzle> {
       isCompleted: showSuccess,
       onTimeUp: _handleTimeUp, // Add this
       isPaused: _isPaused, // Add this
+      childId: widget.childId, // Add this
       child: StandardThreePiecePuzzle(
         puzzleAreaSize: puzzleAreaSize,
         referenceImage: 'assets/puzzles/puppy_complete.png',

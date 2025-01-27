@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
+import '../../../../../../../../services/report_progress_service.dart';
 import '../../../../shared/components/completion_overlay.dart';
 import '../../../../shared/wrapper/game_level_wrapper.dart';
 import '../../components/bunny_path_components/bunny_path_helpers.dart';
@@ -9,11 +10,13 @@ import '../../components/bunny_path_components/bunny_path_painter.dart';
 class BunnyPathLevel extends StatefulWidget {
   final VoidCallback onSuccess;
   final Function(int)? onScoreUpdate; // Add score update callback
+  final String childId; // Add this
 
   const BunnyPathLevel({
     super.key,
     required this.onSuccess,
     this.onScoreUpdate, // Optional parameter for score updates
+    required this.childId, // Add this
   });
 
   @override
@@ -41,9 +44,18 @@ class _BunnyPathLevelState extends State<BunnyPathLevel> {
         pathCompleted = true;
       });
 
+      final starsEarned = 3;
       if (widget.onScoreUpdate != null) {
-        widget.onScoreUpdate!(3);
+        widget.onScoreUpdate!(starsEarned);
       }
+
+      // Add progress tracking
+      final progressService = ProgressService();
+      progressService.updateProgress(
+        childId: widget.childId,
+        starsCollected: starsEarned,
+        minutesPlayed: null,
+      );
 
       // Delay the dialog slightly to allow animation to complete
       Future.delayed(const Duration(milliseconds: 500), () {
@@ -178,6 +190,7 @@ class _BunnyPathLevelState extends State<BunnyPathLevel> {
       onTimeUp: _handleTimeUp,
       isPaused: _isPaused,
       isCompleted: showSuccess,
+      childId: widget.childId, // Add this
       child: Stack(
         children: [
           LayoutBuilder(

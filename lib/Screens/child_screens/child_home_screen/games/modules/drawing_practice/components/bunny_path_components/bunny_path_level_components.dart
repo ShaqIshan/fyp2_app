@@ -11,7 +11,7 @@ class BunnyImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: (screenSize.width * 0.5) - 90,
+      left: (screenSize.width * 0.5) - 70,
       bottom: screenSize.height * 0.0,
       child: IgnorePointer(
         child: Image.asset(
@@ -35,7 +35,7 @@ class CarrotImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: (screenSize.width * 0.4) - 35,
+      left: (screenSize.width * 0.4) - 20,
       top: screenSize.height * 0.06 - 50,
       child: IgnorePointer(
         child: Image.asset(

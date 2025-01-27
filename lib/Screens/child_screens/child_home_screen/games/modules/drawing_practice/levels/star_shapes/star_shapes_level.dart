@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyp2_app/shared/app_theme.dart';
+import '../../../../../../../../services/report_progress_service.dart';
 import '../../../../../../child_wrapper.dart';
 import '../../../../shared/components/completion_overlay.dart';
 import '../../../../shared/components/time_up_dialog.dart';
@@ -12,6 +13,7 @@ class StarShapesLevel extends StatefulWidget {
   final VoidCallback? onSuccess;
   final VoidCallback? onGameComplete;
   final Function(int)? onScoreUpdate; // Add score update callback
+  final String childId; // Add this
 
   final String currentShape;
 
@@ -20,6 +22,7 @@ class StarShapesLevel extends StatefulWidget {
     this.onSuccess,
     this.onGameComplete,
     this.onScoreUpdate, // Add this parameter
+    required this.childId, // Add this
 
     required this.currentShape,
   });
@@ -99,9 +102,16 @@ class _StarShapesLevelState extends State<StarShapesLevel> {
   void _handleShapeCompletion() {
     if (!mounted) return;
 
+    final starsEarned = 3;
     if (widget.onScoreUpdate != null) {
-      widget.onScoreUpdate!(3);
+      widget.onScoreUpdate!(starsEarned);
     }
+    final progressService = ProgressService();
+    progressService.updateProgress(
+      childId: widget.childId,
+      starsCollected: starsEarned,
+      minutesPlayed: null,
+    );
 
     showDialog(
       context: context,
@@ -166,6 +176,8 @@ class _StarShapesLevelState extends State<StarShapesLevel> {
       isCompleted: showSuccess,
       onTimeUp: _handleTimeUp, // Add this
       isPaused: _isPaused, // Add this
+      childId: widget.childId, // Add this
+
       child: LayoutBuilder(
         builder: (context, constraints) {
           final size = Size(constraints.maxWidth, constraints.maxHeight);
